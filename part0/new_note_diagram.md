@@ -1,1 +1,20 @@
-[![](https://mermaid.ink/img/pako:eNqtVFlr3DAQ_iuDXpqAs2ezye5DoKWhUHrB5tEQZGlsK2tLrjTeJIT97x1pD9KyLJT0xUij8XyHRvMilNMoFiLgrx6twk9GVl62ufWoCHxVnF2OMhjP-XM5Os_td0cIDZYEroSP3j0G9Au4qxGKnshZMBaId6XzLZgAqjFqhTq3u9yLm5sl-nX86eeP5R3URF1YDIeBem0wDFQY1NgEY1dmUJohPsm2a1B23dDi471l9PvQyR0Px3X2JLJ92YiuJcmIHtASyJBihdPPkXRcJ2gfJQfa1fKmqpOofZ0PwIhgE07xEN2IcjxKinK2WRcs52DCkiT1nMKGwnQ0gQtGXhlbRS9Src-3f4MmAdtS2aGO1NpjCBFOY2ks6mhqjVKjfxfgq1OSjLPHLI0I_-AoUwhHpdTUNqCd6tto4FlKPD_FOZqasqCTFUbqHhvHjPXbabbSWD4-zpTjUJoG_xPMw3GUKO-LXMul8qajHeBpN16lp45gS_AJVc_dk0ErV2zVH_3wVvqx5Zl-7IsjAl6dnqZdbDdQ86ux7vFwjekw3m1u0WqRiRY9O6Z5dLzkFiAXnNBiLha8bOJbykVuN5woe3LLZ6vEgnyPmeg7JrOfM2JRyiYcorfakPOHYILm7Yug5y5OqcoE4pLK2dJUMd77hsN7l-LxoDJU98VAuXYYjK6lp3o9nw1nk9m1nExxdjWVl9OpVsV4fl1O3o9LfTUaT6TYbDKBCf_bdiSmybj5DWIc0zw?type=png)](https://mermaid.live/edit#pako:eNqtVFlr3DAQ_iuDXpqAs2ezye5DoKWhUHrB5tEQZGlsK2tLrjTeJIT97x1pD9KyLJT0xUij8XyHRvMilNMoFiLgrx6twk9GVl62ufWoCHxVnF2OMhjP-XM5Os_td0cIDZYEroSP3j0G9Au4qxGKnshZMBaId6XzLZgAqjFqhTq3u9yLm5sl-nX86eeP5R3URF1YDIeBem0wDFQY1NgEY1dmUJohPsm2a1B23dDi471l9PvQyR0Px3X2JLJ92YiuJcmIHtASyJBihdPPkXRcJ2gfJQfa1fKmqpOofZ0PwIhgE07xEN2IcjxKinK2WRcs52DCkiT1nMKGwnQ0gQtGXhlbRS9Src-3f4MmAdtS2aGO1NpjCBFOY2ks6mhqjVKjfxfgq1OSjLPHLI0I_-AoUwhHpdTUNqCd6tto4FlKPD_FOZqasqCTFUbqHhvHjPXbabbSWD4-zpTjUJoG_xPMw3GUKO-LXMul8qajHeBpN16lp45gS_AJVc_dk0ErV2zVH_3wVvqx5Zl-7IsjAl6dnqZdbDdQ86ux7vFwjekw3m1u0WqRiRY9O6Z5dLzkFiAXnNBiLha8bOJbykVuN5woe3LLZ6vEgnyPmeg7JrOfM2JRyiYcorfakPOHYILm7Yug5y5OqcoE4pLK2dJUMd77hsN7l-LxoDJU98VAuXYYjK6lp3o9nw1nk9m1nExxdjWVl9OpVsV4fl1O3o9LfTUaT6TYbDKBCf_bdiSmybj5DWIc0zw)
+```mermaid
+sequenceDiagram
+Note left of Browser: The button in the form is clicked
+Browser->>Server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+Note over Browser,Server: the data is sent as the body of the POST request
+Note right of Server: A new note object is created
+Server-->>Browser: Status code 302 - asking for new GET request
+Note over Server,Browser: address is defined in header's Location
+Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+Server-->>Browser: html document (notes)
+Note over Server,Browser: the notes page is reloaded
+Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+Server-->>Browser: css file
+Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+Server-->>Browser: the JavaScript file
+Note over Server,Browser: the JavaScript code is executed, makes GET request
+Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+Server-->>Browser: data.json
+Note over Server,Browser: the browser executes the rest of the JavaScript code<br/>to render the notes
+```
