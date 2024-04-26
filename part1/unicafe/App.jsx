@@ -1,30 +1,26 @@
 import { useState } from 'react';
 
-const Button = (props) => {
-  const text = props.text;
-
-  return <button>{text}</button>;
-};
-
 const App = () => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  const addRating = (props) => {
-    const addValue = props.function;
-    const type = props.type;
-    const newValue = props.newValue;
-    addValue(newValue);
-  };
+  const addGood = () => setGood(good + 1);
+
+  const addNeutral = () => setNeutral(neutral + 1);
+
+  const addBad = () => setBad(bad + 1);
 
   return (
     <div>
       <h1>give feedback</h1>
-      <Button text="good" />
-      <Button text="neutral" />
-      <Button text="bad" />
+      <button onClick={addGood}>good</button>
+      <button onClick={addNeutral}>neutral</button>
+      <button onClick={addBad}>bad</button>
       <h1>Statistics</h1>
+      <p>good {good}</p>
+      <p>neutral {neutral}</p>
+      <p>bad {bad}</p>
     </div>
   );
 };
