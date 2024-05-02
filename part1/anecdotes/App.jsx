@@ -21,7 +21,7 @@ const App = () => {
 
   const [selected, setSelected] = useState(0);
 
-  const randomGenerator = (props) => {};
+  const votes = new Uint32Array(9);
 
   const getAnecdote = () => {
     const min = 0;
@@ -29,6 +29,8 @@ const App = () => {
     const random = Math.floor(Math.random() * (max - min + 1)) + min;
     setSelected(random);
   };
+
+  const voteForAnecdote = () => {};
 
   return (
     <div>
