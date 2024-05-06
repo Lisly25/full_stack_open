@@ -22,6 +22,38 @@ const VoteCountDisplay = (props) => {
   return <p>has {count} votes</p>;
 };
 
+const Header = (props) => {
+  const text = props.text;
+
+  return (
+    <div>
+      <h1>{text}</h1>
+    </div>
+  );
+};
+
+const DisplayFavouriteAnecdote = (props) => {
+  const votes = props.votes;
+  let maxValue = votes[0];
+  let maxIndex = 0;
+  const anecdotes = props.anecdotes;
+
+  for (let i = 0; i < votes.length; i++) {
+    if (votes.at(i) > maxValue) {
+      console.log(maxIndex);
+      maxValue = votes[i];
+      maxIndex = i;
+    }
+  }
+
+  if (maxValue === 0) return;
+  return (
+    <div>
+      <p>{anecdotes[maxIndex]}</p>
+    </div>
+  );
+};
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -53,10 +85,13 @@ const App = () => {
 
   return (
     <div>
+      <Header text="Anecdote of the day" />
       <p>{anecdotes[selected]}</p>
       <VoteCountDisplay selected={selected} votes={votes} />
       <VoteButton onClick={voteForAnecdote} text="vote" />
       <NextButton onClick={getAnecdote} text="next anecdote" />
+      <Header text="Anecdote with the most notes" />
+      <DisplayFavouriteAnecdote votes={votes} anecdotes={anecdotes} />
     </div>
   );
 };
