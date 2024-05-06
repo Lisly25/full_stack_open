@@ -54,7 +54,8 @@ const App = () => {
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <VoteCountDisplay selected={selected} votes = {votes}/>
+      <VoteCountDisplay selected={selected} votes={votes} />
+      <VoteButton onClick={voteForAnecdote} text="vote" />
       <NextButton onClick={getAnecdote} text="next anecdote" />
     </div>
   );
