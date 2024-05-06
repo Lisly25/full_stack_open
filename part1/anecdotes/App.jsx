@@ -1,10 +1,25 @@
 import { useState } from 'react';
 
-const Button = (props) => {
+const NextButton = (props) => {
   const onClick = props.onClick;
   const text = props.text;
 
   return <button onClick={onClick}>{text}</button>;
+};
+
+const VoteButton = (props) => {
+  const onClick = props.onClick;
+  const text = props.text;
+
+  return <button onClick={onClick}>{text}</button>;
+};
+
+const VoteCountDisplay = (props) => {
+  const selected = props.selected;
+  const votes = props.votes;
+  const count = votes[selected];
+
+  return <p>has {count} votes</p>;
 };
 
 const App = () => {
@@ -21,7 +36,7 @@ const App = () => {
 
   const [selected, setSelected] = useState(0);
 
-  const votes = new Uint32Array(9);
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0));
 
   const getAnecdote = () => {
     const min = 0;
@@ -30,12 +45,17 @@ const App = () => {
     setSelected(random);
   };
 
-  const voteForAnecdote = () => {};
+  const voteForAnecdote = () => {
+    const newVotes = { ...votes };
+    newVotes[selected] += 1;
+    setVotes(newVotes);
+  };
 
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <Button onClick={getAnecdote} text="next anecdote" />
+      <VoteCountDisplay selected={selected} votes = {votes}/>
+      <NextButton onClick={getAnecdote} text="next anecdote" />
     </div>
   );
 };
