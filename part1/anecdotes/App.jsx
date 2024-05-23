@@ -32,24 +32,23 @@ const Header = (props) => {
   );
 };
 
-const DisplayFavouriteAnecdote = (props) => {
-  const votes = props.votes;
-  let maxValue = votes[0];
-  let maxIndex = 0;
-  const anecdotes = props.anecdotes;
+//Still doesn't work though
 
-  for (let i = 0; i < votes.length; i++) {
-    if (votes.at(i) > maxValue) {
-      console.log(maxIndex);
-      maxValue = votes[i];
-      maxIndex = i;
-    }
-  }
+const DisplayFavouriteAnecdote = ({ anecdotes, votes }) => {
+  const maxValue = Math.max(...votes);
+  const maxIndex = votes.indexOf(maxValue);
+  const favAnecdote = anecdotes[maxIndex];
 
-  if (maxValue === 0) return;
+  if (maxValue === 0)
+    return (
+      <div>
+        <p>no votes yet</p>
+      </div>
+    );
   return (
     <div>
-      <p>{anecdotes[maxIndex]}</p>
+      <p>{favAnecdote}</p>
+      <p>has {maxValue} votes</p>
     </div>
   );
 };
@@ -78,7 +77,7 @@ const App = () => {
   };
 
   const voteForAnecdote = () => {
-    const newVotes = { ...votes };
+    const newVotes = [...votes];
     newVotes[selected] += 1;
     setVotes(newVotes);
   };
