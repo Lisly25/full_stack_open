@@ -21,11 +21,9 @@ const Content = (props) => {
 
   return (
     <div>
-      <p>
         <Part part={first.name} number={first.exercises} />
         <Part part={second.name} number={second.exercises} />
         <Part part={third.name} number={third.exercises} />
-      </p>
     </div>
   );
 };
