@@ -4,7 +4,7 @@ This is my solution for exercises 1.1 - 1.5 of the course Full Stack Open. It wa
 
 # **HOW TO USE**
 
-Inside this directory (anecdoes_app), first run
+Inside this directory (course_information_app), first run
 
 ```bash
   npm install
