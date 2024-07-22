@@ -1,18 +1,25 @@
 import { useState } from 'react';
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]);
+  const [persons, setPersons] = useState([{ name: 'Arto Hellas', number: '+55 555 555 55'}]);
   const [newName, setNewName] = useState('');
+  const [newPhoneNumber, setNewPhoneNumber] = useState('');
 
-  const handleNewContact = (event) => {
+  const handleNewName = (event) => {
     console.log(event.target.value);
     setNewName(event.target.value);
   };
+
+  const handleNewPhoneNumber = (event) => {
+    console.log(event.target.value);
+    setNewPhoneNumber(event.target.value)
+  }
 
   const addPerson = (event) => {
     event.preventDefault();
     const person = {
       name: newName,
+      number: newPhoneNumber,
       id: String(persons.length + 1)
     };
     if (persons.find(query => query.name === person.name))
@@ -22,10 +29,11 @@ const App = () => {
      }
     setPersons(persons.concat(person));
     setNewName('');
+    setNewPhoneNumber('');
   };
 
   const Person = ({ person }) => {
-    return <div>{person.name}</div>;
+    return <div>{person.name} {person.number}</div>;
   };
 
   return (
@@ -33,7 +41,10 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={addPerson}>
         <div>
-          name: <input value={newName} onChange={handleNewContact} />
+          name: <input value={newName} onChange={handleNewName} />
+        </div>
+        <div>
+          number: <input value={newPhoneNumber} onChange={handleNewPhoneNumber}/>
         </div>
         <div>
           <button type="submit">add</button>
