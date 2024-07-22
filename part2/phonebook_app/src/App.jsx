@@ -13,8 +13,13 @@ const App = () => {
     event.preventDefault();
     const person = {
       name: newName,
-      //id: String(notes.length + 1),
+      id: String(persons.length + 1)
     };
+    if (persons.find(query => query.name === person.name))
+    {
+      window.alert(`${newName} is already added to the phonebook`)
+      return ;
+     }
     setPersons(persons.concat(person));
     setNewName('');
   };
