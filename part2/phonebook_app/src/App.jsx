@@ -10,43 +10,20 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('');
 
   const handleNewName = (event) => {
-    console.log(event.target.value);
     setNewName(event.target.value);
   };
 
   const handleNewPhoneNumber = (event) => {
-    console.log(event.target.value);
     setNewPhoneNumber(event.target.value)
   }
-
-/*   function containsFilter(value) {
-    if (persons.find(filter => persons.)
-  } */
 
   const filteredPersons = newFilter ?
     persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase())) :
     persons
 
   const handleNewFilter = (event) => {
-    console.log(event.target.value)
     setNewFilter(event.target.value)
-    console.log('new filter: ', newFilter)
-/*     if (newFilter.length === 0)
-    {
-      setFilteredPersons(...persons)
-    }
-    else
-    {
-      setFilteredPersons(persons.filter((element) => element.name.includes(newFilter)))
-      console.log(filteredPersons)
-      //setFilteredPersons(...filtered)
-    }
-    console.log(filteredPersons) */
   }
-
-/*   const personsToShow = showAll
-    ? persons
-    : persons.filter(!persons.find(query => query.name === persons.name)) */
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -64,17 +41,6 @@ const App = () => {
     setNewName('');
     setNewPhoneNumber('');
   };
-
-/*   const useNewFilter = (event) => {
-    event.preventDefault();
-    setNewFilter(newFilter);
-    if (newFilter.length === 0)
-      setShowAll(showAll)
-    else
-    {
-      
-    }
-  } */
 
   const Person = ({ person }) => {
     return <div>{person.name} {person.number}</div>;
