@@ -1,9 +1,13 @@
 import { useState } from 'react';
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: 'Arto Hellas', number: '+55 555 555 55'}]);
+  const [persons, setPersons] = useState([{ name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }]);
   const [newName, setNewName] = useState('');
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
+  const [newFilter, setNewFilter] = useState('');
 
   const handleNewName = (event) => {
     console.log(event.target.value);
@@ -14,6 +18,35 @@ const App = () => {
     console.log(event.target.value);
     setNewPhoneNumber(event.target.value)
   }
+
+/*   function containsFilter(value) {
+    if (persons.find(filter => persons.)
+  } */
+
+  const filteredPersons = newFilter ?
+    persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase())) :
+    persons
+
+  const handleNewFilter = (event) => {
+    console.log(event.target.value)
+    setNewFilter(event.target.value)
+    console.log('new filter: ', newFilter)
+/*     if (newFilter.length === 0)
+    {
+      setFilteredPersons(...persons)
+    }
+    else
+    {
+      setFilteredPersons(persons.filter((element) => element.name.includes(newFilter)))
+      console.log(filteredPersons)
+      //setFilteredPersons(...filtered)
+    }
+    console.log(filteredPersons) */
+  }
+
+/*   const personsToShow = showAll
+    ? persons
+    : persons.filter(!persons.find(query => query.name === persons.name)) */
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -32,6 +65,17 @@ const App = () => {
     setNewPhoneNumber('');
   };
 
+/*   const useNewFilter = (event) => {
+    event.preventDefault();
+    setNewFilter(newFilter);
+    if (newFilter.length === 0)
+      setShowAll(showAll)
+    else
+    {
+      
+    }
+  } */
+
   const Person = ({ person }) => {
     return <div>{person.name} {person.number}</div>;
   };
@@ -39,6 +83,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        filter shown with: <input value={newFilter} onChange={handleNewFilter}/>
+      </div>
+      <h2>Add a new contact</h2>
       <form onSubmit={addPerson}>
         <div>
           name: <input value={newName} onChange={handleNewName} />
@@ -52,7 +100,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map((person) => (
+        {filteredPersons.map((person) => (
           <li key={person.name}>
             <Person person={person}/>
           </li>
