@@ -34,6 +34,11 @@ const App = () => {
     setNewFilter(event.target.value)
   }
 
+  function getIdFromName(persons, targetName) {
+    const person = persons.find(person => person.name === targetName)
+    return person.id;
+  } 
+
   const addPerson = (event) => {
     event.preventDefault();
     const person = {
@@ -42,8 +47,22 @@ const App = () => {
     };
     if (persons.find(query => query.name === person.name))
     {
-      window.alert(`${newName} is already added to the phonebook`)
-      return ;
+      if (window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`))
+      {
+        phonebookService
+          .update(getIdFromName(persons, person.name), person)
+          .then(() => {
+            phonebookService
+              .getAll()
+              .then (response => {
+              setPersons(response.data)
+         }
+         )
+          })
+        return ;
+      }
+      else
+        return ;
      }
     phonebookService
       .create(person)
