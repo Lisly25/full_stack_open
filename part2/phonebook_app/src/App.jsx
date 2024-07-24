@@ -39,16 +39,24 @@ const App = () => {
     const person = {
       name: newName,
       number: newPhoneNumber,
-      id: String(persons.length + 1)
+      //id: String(persons.length + 1)
     };
     if (persons.find(query => query.name === person.name))
     {
       window.alert(`${newName} is already added to the phonebook`)
       return ;
      }
-    setPersons(persons.concat(person));
+    axios
+      .post('http://localhost:3001/persons', person)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('');
+        setNewPhoneNumber('');
+      })
+
+/*     setPersons(persons.concat(person));
     setNewName('');
-    setNewPhoneNumber('');
+    setNewPhoneNumber(''); */
   };
 
   return (
