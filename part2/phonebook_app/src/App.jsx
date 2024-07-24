@@ -53,11 +53,23 @@ const App = () => {
         setNewName('');
         setNewPhoneNumber('');
       })
-
-/*     setPersons(persons.concat(person));
-    setNewName('');
-    setNewPhoneNumber(''); */
   };
+
+  const removePerson = (person) => {
+    if (window.confirm(`Are you sure you want to delete ${person.name}?`))
+      phonebookService
+        .remove(person.id)
+        .then(response =>
+         console.log('Deleted contact')
+         )
+      phonebookService
+         .getAll()
+         .then (response => {
+            setPersons(response.data)
+         }
+
+         )
+  }
 
   return (
     <div>
@@ -66,7 +78,7 @@ const App = () => {
       <h3>Add a new contact</h3>
       <PersonForm name={newName} addNew={addPerson} newNameEventHandler={handleNewName} phoneNumber={newPhoneNumber} newPhoneNumberEventHandler={handleNewPhoneNumber}/>
       <h3>Numbers</h3>
-      <Numbers filteredContacts={filteredPersons}/>
+      <Numbers filteredContacts={filteredPersons} removeEventHandler={removePerson}/>
     </div>
   );
 };
