@@ -5,7 +5,6 @@ const Numbers = (props) => {
 	  };
 	
 	const DeletePerson = (props) => {
-		console.log(`Person ${props.person.name} about to be deleted`)
 		return (
 			<button type="button" onClick={() => props.removeEventHandler(props.person)}>delete</button>
 		)

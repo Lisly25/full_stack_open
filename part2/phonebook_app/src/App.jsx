@@ -38,8 +38,7 @@ const App = () => {
     event.preventDefault();
     const person = {
       name: newName,
-      number: newPhoneNumber,
-      //id: String(persons.length + 1)
+      number: newPhoneNumber
     };
     if (persons.find(query => query.name === person.name))
     {
@@ -59,16 +58,14 @@ const App = () => {
     if (window.confirm(`Are you sure you want to delete ${person.name}?`))
       phonebookService
         .remove(person.id)
-        .then(response =>
-         console.log('Deleted contact')
-         )
-      phonebookService
-         .getAll()
-         .then (response => {
+        .then(() =>
+         phonebookService
+          .getAll()
+          .then (response => {
             setPersons(response.data)
          }
-
          )
+        )
   }
 
   return (
