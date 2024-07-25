@@ -4,6 +4,7 @@ import ContactFilter from './components/ContactFilter';
 import PersonForm from './components/PersonForm';
 import Numbers from './components/Numbers';
 import Notification from './components/Notification'
+import Error from './components/Error'
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,6 +12,7 @@ const App = () => {
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
   const [newFilter, setNewFilter] = useState('');
   const [notification, setNewNotification] = useState(null);
+  const [error, setNewError] = useState(null)
 
   useEffect(() => {
     phonebookService
@@ -18,6 +20,14 @@ const App = () => {
       .then(response => {
         setPersons(response.data)
       })
+      .catch(error => {
+        setNewError(`Failed to get contacts from server`)
+        setTimeout(() => {
+          setNewError(null)
+        }, 5000
+        )
+      }
+      )
   }, [])
 
   const handleNewName = (event) => {
@@ -59,7 +69,7 @@ const App = () => {
               .then (response => {
               setPersons(response.data)
               setNewNotification(
-                `Added ${person.name}`
+                `Updated ${person.name}'s information`
               )
               setTimeout(() => {
                 setNewNotification(null)
@@ -67,6 +77,14 @@ const App = () => {
          }
          )
           })
+          .catch(error => {
+            setNewError(`Failed to update ${person.name}'s contact: it was deleted from the server`)
+            setTimeout(() => {
+              setNewError(null)
+            }, 5000
+            )
+          }
+          )
         return ;
       }
       else
@@ -85,6 +103,14 @@ const App = () => {
           setNewNotification(null)
         }, 5000)
       })
+      .catch(error => {
+        setNewError(`Failed add ${person.name}'s contact information to server`)
+        setTimeout(() => {
+          setNewError(null)
+        }, 5000
+        )
+      }
+      )
   };
 
   const removePerson = (person) => {
@@ -99,12 +125,21 @@ const App = () => {
          }
          )
         )
+        .catch(error => {
+          setNewError(`Failed to remove ${person.name} from the server: might already have been removed`)
+          setTimeout(() => {
+            setNewError(null)
+          }, 5000
+          )
+        }
+        )
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
       <Notification message={notification}/>
+      <Error message={error}/>
       <ContactFilter filter={newFilter} eventHandler={handleNewFilter}/>
       <h3>Add a new contact</h3>
       <PersonForm name={newName} addNew={addPerson} newNameEventHandler={handleNewName} phoneNumber={newPhoneNumber} newPhoneNumberEventHandler={handleNewPhoneNumber}/>
