@@ -1,5 +1,13 @@
 const CountryDetailed = (props) => {
 	const languageValues = Object.values(props.country.languages)
+
+	const flagStyle = {
+		fontSize: 100,
+		position: "relative",
+		top: -100,
+		left: 20
+	}
+	
 	return (
 		<div>
 			<h1>{props.country.name.common}</h1>
@@ -12,6 +20,7 @@ const CountryDetailed = (props) => {
 						{language}
 					</li>)}
 				</ul>
+			<p style={flagStyle}>{props.country.flag}</p>
 		</div>
 	)
 }
