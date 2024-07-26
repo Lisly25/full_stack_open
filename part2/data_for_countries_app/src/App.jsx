@@ -10,30 +10,25 @@ const App = () => {
   const [newCountryList, setNewCountryList] = useState([...allCountries])
  
   useEffect(() => {
-    console.log('fetching country list..')
     CountryService
       .getAll()
       .then(response => {
-        console.log(`response status: ${response.status}`)
-        console.log(`response status: ${response.headers}`)
-        console.log(response.data[1].name.common)
         setAllCountries(response.data)
-        //console.log(`Printing content of all countries: ${allCountries}`)
+      .catch(error =>
+        console.log(`An error occured fetching the country list: ${error}`)
+      )
       })
   }, [])
 
   useEffect(() => {
     if (newFilter)
     {
-      console.log("Trying to find the names of countries: ")
-      console.log(allCountries[0].name.common)
       const newCountryList = allCountries.filter(country => country.name.common.toLowerCase().includes(newFilter.toLowerCase()))
       setNewCountryList(newCountryList)
     }
   }, [newFilter, allCountries])
 
   const handleNewFilter = (event) => {
-    //console.log(event.target.value)
     setNewSearch(event.target.value)
     setNewFilter(event.target.value)
   }
