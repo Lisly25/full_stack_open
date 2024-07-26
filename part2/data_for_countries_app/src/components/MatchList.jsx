@@ -2,6 +2,8 @@ import CountryDetailed from './CountryDetailed'
 
 const MatchList = (props) => {
 
+	if (!props.filter)
+		return ;
 	if (props.filteredCountries && props.countryCount === 1)
 	{
 		return (

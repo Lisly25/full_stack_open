@@ -41,7 +41,7 @@ const App = () => {
    return (
      <div>
       <SearchForm name={newSearch} eventHandler={handleNewFilter}/>
-      <MatchList filteredCountries={newCountryList} countryCount={newCountryList.length}/>
+      <MatchList filteredCountries={newCountryList} countryCount={newCountryList.length} filter={newFilter}/>
     </div>
   )
 }
