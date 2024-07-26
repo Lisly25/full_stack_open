@@ -8,7 +8,8 @@ const App = () => {
   const [newFilter, setNewFilter] = useState(null);
   const [allCountries, setAllCountries] = useState([]);
   const [newCountryList, setNewCountryList] = useState([...allCountries])
- 
+  const [countryToShow, setCountryToShow] = useState(-1)
+
   useEffect(() => {
     CountryService
       .getAll()
@@ -31,12 +32,13 @@ const App = () => {
   const handleNewFilter = (event) => {
     setNewSearch(event.target.value)
     setNewFilter(event.target.value)
+    setCountryToShow(-1)
   }
 
    return (
      <div>
       <SearchForm name={newSearch} eventHandler={handleNewFilter}/>
-      <MatchList filteredCountries={newCountryList} countryCount={newCountryList.length} filter={newFilter}/>
+      <MatchList filteredCountries={newCountryList} countryCount={newCountryList.length} filter={newFilter} countryToShow={countryToShow} setCountryToShow={setCountryToShow}/>
     </div>
   )
 }

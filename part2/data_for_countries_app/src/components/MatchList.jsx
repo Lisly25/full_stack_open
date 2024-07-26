@@ -1,7 +1,20 @@
 import CountryDetailed from './CountryDetailed'
+import { useState } from 'react'
 
 const MatchList = (props) => {
 
+	const showCountry = (event, index) => {
+		event.preventDefault()
+		props.setCountryToShow(index)
+	}
+
+	if (props.countryToShow !== -1)
+	{
+		const toShow = props.countryToShow
+		return (
+			<CountryDetailed country={props.filteredCountries[toShow]}/>
+		)
+	}
 	if (!props.filter)
 		return ;
 	if (props.filteredCountries && props.countryCount === 1)
@@ -22,9 +35,9 @@ const MatchList = (props) => {
 	{
 		return (
 			<ul>
-        	{props.filteredCountries.map((country) => (
+        	{props.filteredCountries.map((country, index) => (
           	<li key={country.name.common}>
-	            {country.name.common}
+	            {country.name.common}<button onClick={(event) => showCountry(event, index)}>show</button>
           	</li>
         	))}
       		</ul>
