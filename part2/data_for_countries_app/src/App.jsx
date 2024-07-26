@@ -14,9 +14,9 @@ const App = () => {
       .getAll()
       .then(response => {
         setAllCountries(response.data)
-      .catch(error =>
+      })
+      .catch(error => {
         console.log(`An error occured fetching the country list: ${error}`)
-      )
       })
   }, [])
 
