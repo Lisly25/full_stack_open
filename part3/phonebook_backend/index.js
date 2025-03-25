@@ -37,6 +37,14 @@ const generateID = () => {
   return id
 }
 
+const doesNameAlreadyExist = (name) => {
+  duplicate = contacts.find(contact => contact.name === name)
+
+  if (duplicate)
+    return true
+  return false
+}
+
 app.get('/info', (request, response) => {
   response.send(`<div><p>Phonebook has info for ${contacts.length} people</p><p>${getCurrentTimestamp()}</p></div>`)
 })
@@ -74,6 +82,13 @@ app.post('/api/persons', (request, response) => {
   {
     return response.status(400).json({
       error: 'Body is missing required fields.'
+    })
+  }
+
+  if (doesNameAlreadyExist(body.name))
+  {
+    return response.status(400).json({
+      error: 'Name must be unique'
     })
   }
 
