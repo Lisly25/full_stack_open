@@ -24,6 +24,16 @@ let notes = [
     }
 ]
 
+const getCurrentTimestamp = () => {
+  const date = new Date()
+  timestamp = `${date.toUTCString()}`
+  return timestamp
+}
+
+app.get('/info', (request, response) => {
+  response.send(`<div><p>Phonebook has info for ${notes.length} people</p><p>${getCurrentTimestamp()}</p></div>`)
+})
+
 app.get('/api/persons', (request, response) => {
     response.json(notes)
 })
