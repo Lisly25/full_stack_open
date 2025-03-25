@@ -1,3 +1,5 @@
+import Weather from "./Weather"
+
 const CountryDetailed = (props) => {
 	const languageValues = Object.values(props.country.languages)
 
@@ -21,6 +23,7 @@ const CountryDetailed = (props) => {
 					</li>)}
 				</ul>
 			<img src={props.country.flags.png} />
+			<Weather country={props.country}/>
 		</div>
 	)
 }
