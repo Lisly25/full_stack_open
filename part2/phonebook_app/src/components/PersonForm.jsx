@@ -2,15 +2,15 @@ const PersonForm = (props) => {
 
 	return (
 		<div>
-      	<form onSubmit={props.addNew}>
+      	<form id="PersonForm" onSubmit={props.addNew}>
         <div>
-        	name: <input value={props.name} onChange={props.newNameEventHandler} />
+        	name: <input id="NameInput" value={props.name} onChange={props.newNameEventHandler} />
         </div>
         <div>
-        	number: <input value={props.phoneNumber} onChange={props.newPhoneNumberEventHandler}/>
+        	number: <input id="NumberInput" value={props.phoneNumber} onChange={props.newPhoneNumberEventHandler}/>
         </div>
         <div>
-        	<button type="submit">add</button>
+        	<button id="NewContactSubmit" type="submit">add</button>
         </div>
       	</form>
 		</div>
