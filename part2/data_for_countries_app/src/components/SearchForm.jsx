@@ -3,7 +3,7 @@ const SearchForm = (props) => {
 	return (
 		<div>
 			<form>
-				find countries: <input value={props.name} onChange={props.eventHandler}/>
+				find countries: <input id="CountryFilter" value={props.name} onChange={props.eventHandler}/>
 			</form>
 		</div>
 	)
