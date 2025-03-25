@@ -1,7 +1,9 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+app.use(morgan('tiny'))
 
 let contacts = [
     { 
@@ -34,7 +36,7 @@ const getCurrentTimestamp = () => {
 
 const generateID = () => {
   id = Math.floor(Math.random() * 1000000000)
-  return id
+  return id.toString()
 }
 
 const doesNameAlreadyExist = (name) => {
@@ -76,7 +78,6 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
-  console.log("Request body:", body)
 
   if (!body.name || !body.number)
   {
