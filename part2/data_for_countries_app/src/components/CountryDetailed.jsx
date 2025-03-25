@@ -20,7 +20,7 @@ const CountryDetailed = (props) => {
 						{language}
 					</li>)}
 				</ul>
-			<p style={flagStyle}>{props.country.flag}</p>
+			<img src={props.country.flags.png} />
 		</div>
 	)
 }
