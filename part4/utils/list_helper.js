@@ -1,3 +1,4 @@
+const lodash = require('lodash')
 
 const dummy = (blogs) => {
   return 1
@@ -11,7 +12,7 @@ const totalLikes = (blogs) => {
 const favoriteBlog = (blogs) => {
   if (blogs.length === 0)
     return {}
-  
+
   let favorite = blogs[0]
 
   blogs.forEach(element => {
@@ -26,8 +27,29 @@ const favoriteBlog = (blogs) => {
   }
 }
 
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0)
+    return {}
+
+  const grouped_by_author = lodash._(blogs).groupBy('author').map((items, author)=> ({author: author,blogs: items.length
+  })).value();
+
+  // console.log("Blogs grouped by authors: ", grouped_by_author)
+
+  const sorted_groups = lodash.sortBy(grouped_by_author, [function (o) {return o.blogs}])
+
+  // console.log("Grouped blogs sorted into ascending order", sorted_groups)
+
+  const most_blogs = sorted_groups[sorted_groups.length - 1]
+
+  // console.log("Author with most blogs, and how many blogs: ", most_blogs)
+
+  return most_blogs
+}
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs,
 }
