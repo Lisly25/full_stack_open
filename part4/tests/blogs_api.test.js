@@ -20,9 +20,9 @@ beforeEach(async () =>  {
 
 test("getting all entries, asserting correct http status code and content type", async () => {
     await api
-      .get('/api/blogs')
-      .expect(200)
-      .expect('Content-Type', /application\/json/)
+        .get('/api/blogs')
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
 })
 
 test("getting all entries, asserting that it does return all entries", async () => {
@@ -31,6 +31,17 @@ test("getting all entries, asserting that it does return all entries", async () 
     assert.strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
+test("checking if the unique identifier is named 'id' and not '_id'", async () => {
+    const response = await api.get('/api/blogs')
+
+    const valid_key = 'id'
+    const invalid_key = '_id'
+
+    assert.strictEqual(response.body[0].hasOwnProperty(valid_key), true)
+    assert.strictEqual(response.body[0].hasOwnProperty(invalid_key), false)
+    assert.strictEqual(mongoose.isValidObjectId(response.body[0].id), true)
+})
+
 after(async () => {
-  await mongoose.connection.close()
+    await mongoose.connection.close()
 })
