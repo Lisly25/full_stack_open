@@ -66,6 +66,29 @@ test("is it possible to add a new blog post", async () => {
     assert(contents.includes('Adding new blog'))
 })
 
+test("are the likes set to 0 if a blog is posted without the likes property being specified", async () => {
+    const new_blog = {
+        author: "No likes",
+        title: "As in they are not specified",
+        url: "new_blog.com/no_likes"
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(new_blog)
+
+    const new_state = await api.get('/api/blogs')
+
+    const total_likes = new_state.body.reduce((total, num) => total + num.likes, 0)
+
+    const old_total_likes = helper.initialBlogs.reduce((total, num) => total + num.likes, 0)
+
+    // console.log("Original likes: ", old_total_likes, "Total likes:", total_likes)
+
+    // Only checking the sum of likes - but if any blog missed the likes attribute, their sum would be NaN
+    assert.strictEqual(total_likes, old_total_likes)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
