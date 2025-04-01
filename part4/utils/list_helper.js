@@ -47,9 +47,45 @@ const mostBlogs = (blogs) => {
   return most_blogs
 }
 
+const addArrayElements = (arr) => {
+  const sum = arr.reduce((total, num) => total + num, 0)
+  return sum
+}
+
+const mostLikes = (blogs) => {
+  if (blogs.length === 0)
+    return {}
+
+  const grouped_by_author = lodash._(blogs).groupBy('author').map((items, author) => ({author: author,likes: lodash.map(items, 'likes')
+  })).value();
+
+  // console.log("Blogs grouped by authors: ", grouped_by_author)
+
+  const likes_reduced = grouped_by_author.map((element) =>
+    {
+      return {
+        author: element.author, likes: addArrayElements(element.likes)
+      }
+    }
+  )
+
+  //console.log("Likes summed together: ", likes_reduced)
+  
+  const sorted_by_likes = lodash.sortBy(likes_reduced, [function (o) {return o.likes}])
+
+  // console.log("Sorted by likes: ", sorted_by_likes)
+
+  const most_likes = sorted_by_likes[sorted_by_likes.length - 1]
+
+  // console.log("Most likes: ", most_likes)
+
+  return most_likes
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes
 }
