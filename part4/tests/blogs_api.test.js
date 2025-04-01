@@ -89,6 +89,30 @@ test("are the likes set to 0 if a blog is posted without the likes property bein
     assert.strictEqual(total_likes, old_total_likes)
 })
 
+test("is a missing TITLE in a new blog resulting in a bad request response", async () => {
+    const new_blog = {
+        author: "No title",
+        url: "new_blog.com/no_title"
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(new_blog)
+        .expect(400)
+})
+
+test("is a missing URL in a new blog resulting in a bad request response", async () => {
+    const new_blog = {
+        author: "No url",
+        title: "This post has no url"
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(new_blog)
+        .expect(400)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
