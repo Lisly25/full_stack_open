@@ -20,6 +20,10 @@ const errorHandler = (error, request, response, next) => {
   {
     return response.status(404).send({ error: `${error.message} - probably due to resource having been removed` })
   }
+  if (error.name === 'MongoServerError' && error.message.includes('E11000 duplicate key error'))
+  {
+    return response.status(400).json({ error: 'expected "username" to be unique' })
+  }
 }
 
 module.exports = {

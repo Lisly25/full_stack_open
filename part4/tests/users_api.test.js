@@ -40,6 +40,51 @@ describe('User registration (POST) tests', () => {
         const usernames = usersAtEnd.map(u => u.username)
         assert(usernames.includes(newUser.username))
     })
+
+    test('too short username', async () => {
+        const newUser = {
+            username: 'te',
+            name: 'QA_Tester',
+            password: 'djklsfn',
+        }
+
+        const response = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+
+        assert.strictEqual(response.body.error, 'a username that is at least 3 charaters long is required')
+    })
+
+    test('too short password', async () => {
+        const newUser = {
+            username: 'tester',
+            name: 'QA_Tester',
+            password: 'd',
+        }
+
+        const response = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+        
+        assert.strictEqual(response.body.error, 'a password that is at least 3 charaters long is required')
+    })
+
+    test('duplicate username', async () => {
+        const newUser = {
+            username: 'root',
+            name: 'QA_Tester',
+            password: 'djfdkgl',
+        }
+
+        const response = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+
+        assert.strictEqual(response.body.error, 'expected "username" to be unique')
+    })
 })
 
 describe('Retrieving user list with GET', () => {
