@@ -16,6 +16,10 @@ const errorHandler = (error, request, response, next) => {
   {
     return response.status(400).send({ error: error.message })
   }
+  if (error.name === 'TypeError')
+  {
+    return response.status(404).send({ error: `${error.message} - probably due to resource having been removed` })
+  }
 }
 
 module.exports = {

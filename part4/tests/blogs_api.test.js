@@ -149,6 +149,80 @@ describe("testing removing blogs with DELETE", () => {
     })
 })
 
+describe("testing updating blogs with PUT", () => {
+    test("valid updating", async () => {
+        const old_state = await helper.blogsInDB()
+
+        const modified_blog = {
+            author: "Updater",
+            title: "Updated blog",
+            url: "new_blog.com/updated",
+            likes: 7
+        }
+
+        await api
+            .put(`/api/blogs/${old_state[0].id}`)
+            .send(modified_blog)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        const new_state = await helper.blogsInDB()
+
+        assert.strictEqual(modified_blog.title, new_state[0].title)
+    })
+
+    test("trying to use invalid string as ID", async () => {
+        const modified_blog = {
+            author: "Updater",
+            title: "Updated blog",
+            url: "new_blog.com/updated",
+            likes: 7
+        }
+
+        await api
+            .put('/api/blogs/foobar')
+            .send(modified_blog)
+            .expect(400)
+    })
+
+    test("using a valid id, but the resource has already been removed", async () => {
+        const removed_id = await helper.nonExistingID()
+
+        const modified_blog = {
+            author: "Updater",
+            title: "Updated blog",
+            url: "new_blog.com/updated",
+            likes: 7
+        }
+
+        await api
+            .put(`/api/blogs/${removed_id}`)
+            .send(modified_blog)
+            .expect(404)
+    })
+
+    test("updating blog without specifying number of likes", async () => {
+        const old_state = await helper.blogsInDB()
+
+        const modified_blog = {
+            author: "Updater",
+            title: "Updated blog",
+            url: "new_blog.com/updated"
+        }
+
+        await api
+            .put(`/api/blogs/${old_state[0].id}`)
+            .send(modified_blog)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        const new_state = await helper.blogsInDB()
+
+        assert.strictEqual(modified_blog.title, new_state[0].title)
+        assert.strictEqual(new_state[0].likes, old_state[0].likes)
+    })
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
