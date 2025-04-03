@@ -51,6 +51,8 @@ describe('Testing creating blogs with POST', () => {
 
         const userId = await helper.createDummyUser()
 
+        const token = await helper.getTokenForDummy(api)
+
         const new_blog = {
             author: "New blogger",
             title: "Adding new blog",
@@ -61,6 +63,7 @@ describe('Testing creating blogs with POST', () => {
 
         await api
             .post('/api/blogs')
+            .set("Authorization", `Bearer ${token}`)
             .send(new_blog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -75,6 +78,8 @@ describe('Testing creating blogs with POST', () => {
 
     test("are the likes set to 0 if a blog is posted without the likes property being specified", async () => {
         const userId = await helper.createDummyUser()
+
+        const token = await helper.getTokenForDummy(api)
         
         const new_blog = {
             author: "No likes",
@@ -85,6 +90,7 @@ describe('Testing creating blogs with POST', () => {
 
         await api
             .post('/api/blogs')
+            .set("Authorization", `Bearer ${token}`)
             .send(new_blog)
 
         const new_state = await api.get('/api/blogs')
@@ -102,6 +108,8 @@ describe('Testing creating blogs with POST', () => {
     test("is a missing TITLE in a new blog resulting in a bad request response", async () => {
         const userId = await helper.createDummyUser()
 
+        const token = await helper.getTokenForDummy(api)
+
         const new_blog = {
             author: "No title",
             url: "new_blog.com/no_title",
@@ -110,12 +118,15 @@ describe('Testing creating blogs with POST', () => {
 
         await api
             .post('/api/blogs')
+            .set("Authorization", `Bearer ${token}`)
             .send(new_blog)
             .expect(400)
     })
 
     test("is a missing URL in a new blog resulting in a bad request response", async () => {
         const userId = await helper.createDummyUser()
+
+        const token = await helper.getTokenForDummy(api)
 
         const new_blog = {
             author: "No url",
@@ -125,6 +136,7 @@ describe('Testing creating blogs with POST', () => {
 
         await api
             .post('/api/blogs')
+            .set("Authorization", `Bearer ${token}`)
             .send(new_blog)
             .expect(400)
     })
@@ -132,10 +144,21 @@ describe('Testing creating blogs with POST', () => {
 
 describe("testing removing blogs with DELETE", () => {
     test("removing an existing note from a valid ID", async () => {
+        await helper.createDummyUser()
+
+        const token = await helper.getTokenForDummy(api)
+
+        await helper.createDummyBlog(api, token)
+
+        console.log("DELETE test - getting original state")
+
         const original_state = await helper.blogsInDB()
 
+        console.log("original state in test: ", original_state.body[0])
+
         await api
-            .delete(`/api/blogs/${original_state[0].id}`)
+            .delete(`/api/blogs/${original_state.body[0].id}`)
+            .set("Authorization", `Bearer ${token}`)
             .expect(204)
 
         const new_state = await helper.blogsInDB()
@@ -148,16 +171,26 @@ describe("testing removing blogs with DELETE", () => {
     })
 
     test("trying to use a string that is not a valid ID type", async () => {
+        await helper.createDummyUser()
+
+        const token = await helper.getTokenForDummy(api)
+
         await api
             .delete('/api/blogs/foobar')
+            .set("Authorization", `Bearer ${token}`)
             .expect(400)
     })
 
     test("using a valid id, but the resource has already been removed", async () => {
+        await helper.createDummyUser()
+
+        const token = await helper.getTokenForDummy(api)
+
         const removed_id = await helper.nonExistingID()
 
         await api
             .delete(`/api/blogs/${removed_id}`)
+            .set("Authorization", `Bearer ${token}`)
             .expect(204)
     })
 })

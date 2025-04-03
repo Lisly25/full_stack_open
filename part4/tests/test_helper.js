@@ -51,10 +51,42 @@ const createDummyUser = async () => {
     return user.toJSON().id
 }
 
+const getTokenForDummy = async (api) => {
+    const credentials = {
+        username: "Dummy",
+        password: "sekret"
+    }
+
+    const response = await api
+        .post('/api/login')
+        .send(credentials)
+
+    return response.body.token
+}
+
+const createDummyBlog = async (api, token) => {
+    const new_blog = {
+        author: "Dummy",
+        title: "Dummy blog",
+        url: "new_blog.com/dummy",
+        likes: 0,
+        userId: token.id
+    }
+
+    response = await api
+        .post('/api/blogs')
+        .set("Authorization", `Bearer ${token}`)
+        .send(new_blog)
+    
+    return response.body
+}
+
 module.exports = {
     initialBlogs,
     blogsInDB,
     nonExistingID,
     usersInDb,
-    createDummyUser
+    createDummyUser,
+    getTokenForDummy,
+    createDummyBlog
 }
