@@ -1,8 +1,9 @@
 const blogsRouter = require('express').Router()
 const { process_params } = require('express/lib/router')
 const Blog = require('../models/Blog')
-const User = require('../models/User')
-const jwt = require('jsonwebtoken')
+const middleware = require('../utils/middleware')
+//const User = require('../models/User')
+//const jwt = require('jsonwebtoken')
 
 // const getTokenFrom = request => {
 //   const authorization = request.get('authorization')
@@ -20,39 +21,39 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
   
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   const body = request.body
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  // const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
-  if (!decodedToken.id)
-  {
-    return response.status(401).json({ error: 'token invalid' })
-  }
+  // if (!decodedToken.id)
+  // {
+  //   return response.status(401).json({ error: 'token invalid' })
+  // }
 
-  const user = await User.findById(decodedToken.id)
+  // const user = await User.findById(decodedToken.id)
   
   const blog = new Blog({
     title: body.title,
     author: body.author,
     url: body.url,
     likes: body.likes,
-    user: user.id
+    user: request.user.id
   })
   
   const savedBlog = await blog.save()
-  user.blogs = user.blogs.concat(savedBlog._id)
-  await user.save()
+  request.user.blogs = request.user.blogs.concat(savedBlog._id)
+  await request.user.save()
 
   response.status(201).json(savedBlog)
 })
 
-blogsRouter.delete('/:id', async (request, response) => {
+blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
   // const id = request.params.id
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  //const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
   const blog = await Blog.findById(request.params.id)
 
-  if (decodedToken.id !== blog.user.toString())
+  if (request.user.id !== blog.user.toString())
   {
     return response.status(401).json({ error: 'token invalid - only creator can delete a blog' })
   }
