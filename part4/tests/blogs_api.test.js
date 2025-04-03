@@ -7,6 +7,7 @@ const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/Blog')
+const User = require('../models/User')
 
 beforeEach(async () =>  {
     await Blog.deleteMany({})
@@ -48,11 +49,14 @@ describe('Testing creating blogs with POST', () => {
     test("is it possible to add a new blog post", async () => {
         const original_state = await api.get('/api/blogs')
 
+        const userId = await helper.createDummyUser()
+
         const new_blog = {
             author: "New blogger",
             title: "Adding new blog",
             url: "new_blog.com/new",
-            likes: 0
+            likes: 0,
+            userId: userId
         }
 
         await api
@@ -70,10 +74,13 @@ describe('Testing creating blogs with POST', () => {
     })
 
     test("are the likes set to 0 if a blog is posted without the likes property being specified", async () => {
+        const userId = await helper.createDummyUser()
+        
         const new_blog = {
             author: "No likes",
             title: "As in they are not specified",
-            url: "new_blog.com/no_likes"
+            url: "new_blog.com/no_likes",
+            userId: userId
         }
 
         await api
@@ -93,9 +100,12 @@ describe('Testing creating blogs with POST', () => {
     })
 
     test("is a missing TITLE in a new blog resulting in a bad request response", async () => {
+        const userId = await helper.createDummyUser()
+
         const new_blog = {
             author: "No title",
-            url: "new_blog.com/no_title"
+            url: "new_blog.com/no_title",
+            userId: userId
         }
 
         await api
@@ -105,9 +115,12 @@ describe('Testing creating blogs with POST', () => {
     })
 
     test("is a missing URL in a new blog resulting in a bad request response", async () => {
+        const userId = await helper.createDummyUser()
+
         const new_blog = {
             author: "No url",
-            title: "This post has no url"
+            title: "This post has no url",
+            userId: userId
         }
 
         await api

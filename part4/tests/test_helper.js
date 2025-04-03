@@ -1,6 +1,8 @@
 const Blog = require('../models/Blog')
 const User = require('../models/User')
 
+const bcrypt = require('bcrypt')
+
 const initialBlogs = [
     {
         title: "First blog",
@@ -39,9 +41,20 @@ const usersInDb = async () => {
     return users.map(user => user.toJSON())
 }
 
+const createDummyUser = async () => {
+    //To be able to test POST request - userID is 
+    await User.deleteMany({})
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'Dummy', passwordHash })
+    
+    await user.save()
+    return user.toJSON().id
+}
+
 module.exports = {
     initialBlogs,
     blogsInDB,
     nonExistingID,
-    usersInDb
+    usersInDb,
+    createDummyUser
 }
