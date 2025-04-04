@@ -95,6 +95,36 @@ describe('Retrieving user list with GET', () => {
     })
 })
 
+describe('Login tests', () => {
+    test('valid login', async () => {
+        await helper.createDummyUser()
+
+        const credentials = {
+            username: "Dummy",
+            password: "sekret"
+        }
+    
+        const response = await api
+            .post('/api/login')
+            .send(credentials)
+            .expect(200)
+    })
+
+    test('invalid login', async () => {
+        await helper.createDummyUser()
+
+        const credentials = {
+            username: "Dummy",
+            password: "foobar"
+        }
+    
+        const response = await api
+            .post('/api/login')
+            .send(credentials)
+            .expect(401)
+    })
+})
+
 after(async () => {
     await mongoose.connection.close()
 })

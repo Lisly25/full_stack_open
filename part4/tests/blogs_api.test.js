@@ -49,7 +49,7 @@ describe('Testing creating blogs with POST', () => {
     test("is it possible to add a new blog post", async () => {
         const original_state = await api.get('/api/blogs')
 
-        const userId = await helper.createDummyUser()
+        await helper.createDummyUser()
 
         const token = await helper.getTokenForDummy(api)
 
@@ -57,8 +57,7 @@ describe('Testing creating blogs with POST', () => {
             author: "New blogger",
             title: "Adding new blog",
             url: "new_blog.com/new",
-            likes: 0,
-            userId: userId
+            likes: 0
         }
 
         await api
@@ -77,7 +76,7 @@ describe('Testing creating blogs with POST', () => {
     })
 
     test("are the likes set to 0 if a blog is posted without the likes property being specified", async () => {
-        const userId = await helper.createDummyUser()
+        await helper.createDummyUser()
 
         const token = await helper.getTokenForDummy(api)
         
@@ -85,7 +84,6 @@ describe('Testing creating blogs with POST', () => {
             author: "No likes",
             title: "As in they are not specified",
             url: "new_blog.com/no_likes",
-            userId: userId
         }
 
         await api
@@ -106,14 +104,13 @@ describe('Testing creating blogs with POST', () => {
     })
 
     test("is a missing TITLE in a new blog resulting in a bad request response", async () => {
-        const userId = await helper.createDummyUser()
+        await helper.createDummyUser()
 
         const token = await helper.getTokenForDummy(api)
 
         const new_blog = {
             author: "No title",
-            url: "new_blog.com/no_title",
-            userId: userId
+            url: "new_blog.com/no_title"
         }
 
         await api
@@ -124,14 +121,13 @@ describe('Testing creating blogs with POST', () => {
     })
 
     test("is a missing URL in a new blog resulting in a bad request response", async () => {
-        const userId = await helper.createDummyUser()
+        await helper.createDummyUser()
 
         const token = await helper.getTokenForDummy(api)
 
         const new_blog = {
             author: "No url",
-            title: "This post has no url",
-            userId: userId
+            title: "This post has no url"
         }
 
         await api
@@ -139,6 +135,18 @@ describe('Testing creating blogs with POST', () => {
             .set("Authorization", `Bearer ${token}`)
             .send(new_blog)
             .expect(400)
+    })
+
+    test("trying to create a blog without being logged in", async () => {
+        const new_blog = {
+            author: "No url",
+            title: "This post has no url",
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(new_blog)
+            .expect(401)
     })
 })
 
@@ -148,16 +156,12 @@ describe("testing removing blogs with DELETE", () => {
 
         const token = await helper.getTokenForDummy(api)
 
-        await helper.createDummyBlog(api, token)
-
-        console.log("DELETE test - getting original state")
+        const dummyBlog = await helper.createDummyBlog(api, token)
 
         const original_state = await helper.blogsInDB()
 
-        console.log("original state in test: ", original_state.body[0])
-
         await api
-            .delete(`/api/blogs/${original_state.body[0].id}`)
+            .delete(`/api/blogs/${dummyBlog.id}`)
             .set("Authorization", `Bearer ${token}`)
             .expect(204)
 
@@ -167,7 +171,7 @@ describe("testing removing blogs with DELETE", () => {
 
         const blog_titles = new_state.map(blog => blog.title)
 
-        assert(!blog_titles.includes(original_state[0].title))
+        assert(!blog_titles.includes(dummyBlog.title))
     })
 
     test("trying to use a string that is not a valid ID type", async () => {
@@ -186,12 +190,29 @@ describe("testing removing blogs with DELETE", () => {
 
         const token = await helper.getTokenForDummy(api)
 
-        const removed_id = await helper.nonExistingID()
+        const dummyBlog = await helper.createDummyBlog(api, token)
 
         await api
-            .delete(`/api/blogs/${removed_id}`)
+            .delete(`/api/blogs/${dummyBlog.id}`)
             .set("Authorization", `Bearer ${token}`)
             .expect(204)
+
+        await api
+            .delete(`/api/blogs/${dummyBlog.id}`)
+            .set("Authorization", `Bearer ${token}`)
+            .expect(404)
+    })
+
+    test("trying to delete a blog without being logged in", async () => {
+        await helper.createDummyUser()
+
+        const token = await helper.getTokenForDummy(api)
+
+        const dummyBlog = await helper.createDummyBlog(api, token)
+
+        await api
+        .delete(`/api/blogs/${dummyBlog.id}`)
+        .expect(401)
     })
 })
 

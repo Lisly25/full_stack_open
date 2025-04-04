@@ -48,7 +48,6 @@ const createDummyUser = async () => {
     const user = new User({ username: 'Dummy', passwordHash })
     
     await user.save()
-    return user.toJSON().id
 }
 
 const getTokenForDummy = async (api) => {
