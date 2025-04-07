@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import Logout from './components/Logout'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import login from './services/login'
 
@@ -14,7 +15,7 @@ const App = () => {
   const [blogTitle, setBlogTitle] = useState('')
   const [blogAuthor, setBlogAuthor] = useState('')
   const [blogUrl, setBlogUrl] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -44,12 +45,16 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setMessage('You logged in successfully')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     }
     catch (exception)
     {
-      setErrorMessage('Wrong credentials')
+      setMessage('Wrong credentials')
       setTimeout(() => {
-        setErrorMessage(null)
+        setMessage(null)
       }, 5000)
     }
   }
@@ -67,16 +72,20 @@ const App = () => {
       const response = await blogService.create(newBlog)
       const newBlogs = await blogService.getAll()
       setBlogs(newBlogs)
+      setMessage(`a new blog ${blogTitle} by ${blogAuthor} added`)
       setBlogAuthor('')
       setBlogTitle('')
       setBlogUrl('')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     }
     catch (exception)
     {
       console.log(exception)
-      setErrorMessage('Blog creation failed')
+      setMessage('Blog creation failed')
       setTimeout(() => {
-        setErrorMessage(null)
+        setMessage(null)
       }, 5000)
     }
   }
@@ -86,6 +95,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+        <Notification message={message}/>
         <LoginForm handleLogin={handleLogin} username={username} password={password} setUsername={setUsername} setPassword={setPassword}/>
       </div>
     )
@@ -95,6 +105,7 @@ const App = () => {
     return (
       <div>
         <h2>blogs</h2>
+        <Notification message={message}/>
         <h3>{user.username} logged in</h3><Logout setUser={setUser}/>
         <h2>create new blog</h2>
         <BlogForm handleBlogCreation={handleBlogCreation} blogAuthor={blogAuthor} setBlogAuthor={setBlogAuthor} blogTitle={blogTitle} setBlogTitle={setBlogTitle} blogUrl={blogUrl} setBlogUrl={setBlogUrl}/>
