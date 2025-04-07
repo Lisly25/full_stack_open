@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const router = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const { config } = require('dotenv')
 const userExtractor = require('../utils/middleware').userExtractor
 
 router.get('/', async (request, response) => {
@@ -59,7 +60,15 @@ router.delete('/:id', userExtractor, async (request, response) => {
 router.put('/:id', async (request, response) => {
   const body = request.body
 
+  const user = await User.findById(body.user)
+
+  if (!user) {
+    console.log("Received id: ", body.user)
+    return response.status(400).send({error: "incorrect user id"})
+  }
+
   const blog = {
+    user: user,
     title: body.title,
     author: body.author,
     url: body.url,
