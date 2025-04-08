@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import Blog from './Blog'
+import BlogForm from './BlogForm'
 import { expect, test, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
+import { useRef } from 'react'
 
 describe ('<Blog />', () => {
 
@@ -17,10 +19,13 @@ describe ('<Blog />', () => {
 
   const mockHandler = {
     update:  vi.fn(),
-    getAll: vi.fn()
+    getAll: vi.fn(),
+    create: vi.fn()
   }
 
   const mockSetMessage = vi.fn()
+
+  const mockSetBlogs = vi.fn()
 
   const userData = {
     username: "Tester"
@@ -101,6 +106,31 @@ describe ('<Blog />', () => {
     await user.click(likeButton)
 
     expect(mockHandler.update.mock.calls).toHaveLength(2)
+  })
+
+  test('new blog post form calls the event handler, using the right details', async () => {
+
+    const { container } = render (
+      <BlogForm blogService={mockHandler} setMessage={mockSetMessage} setBlogs={mockSetBlogs}/>
+    )
+
+    const titleInput = container.querySelector("#title-input")
+    const authorInput = container.querySelector("#author-input")
+    const urlInput = container.querySelector("#url-input")
+
+    const createButton = screen.getByText('create')
+
+    const user = userEvent.setup()
+    await user.type(titleInput, 'New blog')
+    await user.type(authorInput, 'QA')
+    await user.type(urlInput, 'foobar.com')
+    await user.click(createButton)
+
+    expect(mockHandler.create.mock.calls).toHaveLength(1)
+
+    expect(mockHandler.create.mock.calls[0][0].title).toBe('New blog')
+    expect(mockHandler.create.mock.calls[0][0].author).toBe('QA')
+    expect(mockHandler.create.mock.calls[0][0].url).toBe('foobar.com')
   })
 
 })
