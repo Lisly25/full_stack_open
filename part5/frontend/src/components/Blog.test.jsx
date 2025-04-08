@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import Blog from './Blog'
-import { expect } from 'vitest'
+import { expect, test, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 
 describe ('<Blog />', () => {
@@ -15,7 +15,12 @@ describe ('<Blog />', () => {
     }
   }
 
-  const mockHandler = vi.fn()
+  const mockHandler = {
+    update:  vi.fn(),
+    getAll: vi.fn()
+  }
+
+  const mockSetMessage = vi.fn()
 
   const userData = {
     username: "Tester"
@@ -80,6 +85,22 @@ describe ('<Blog />', () => {
     const url = screen.queryByText('23')
     expect(url).toBeNull()
 
+  })
+
+  test('if the like button is clicked twice, the event handler is called twice', async () => {
+    render (
+      <Blog blog={blog} blogService={mockHandler} user={userData} setMessage={mockSetMessage}/>
+    )
+
+    const user = userEvent.setup()
+    const viewButton = screen.getByText('view')
+    await user.click(viewButton)
+
+    const likeButton = screen.getByText('like')
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(mockHandler.update.mock.calls).toHaveLength(2)
   })
 
 })
