@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import Blog from './Blog'
 import { expect } from 'vitest'
+import userEvent from '@testing-library/user-event'
 
 describe ('<Blog />', () => {
 
@@ -15,6 +16,10 @@ describe ('<Blog />', () => {
   }
 
   const mockHandler = vi.fn()
+
+  const userData = {
+    username: "Tester"
+  }
 
   test ('blog title and author are displayed in default view', async () => {
 
@@ -45,5 +50,36 @@ describe ('<Blog />', () => {
 
     const likes = screen.queryByText('23')
     expect(likes).toBeNull()
-  })  
+  })
+
+  test ('blog url is displayed after the "view" button is clicked', async () => {
+
+    render (
+      <Blog blog={blog} blogService={mockHandler} user={userData}/>
+    )
+
+    const user = userEvent.setup()
+    const button = screen.getByText('view')
+    await user.click(button)
+
+    const url = screen.queryByText('example.com')
+    expect(url).toBeNull()
+
+  })
+
+  test ('blog\s likes are displayed after the "view" button is clicked', async () => {
+
+    render (
+      <Blog blog={blog} blogService={mockHandler} user={userData}/>
+    )
+
+    const user = userEvent.setup()
+    const button = screen.getByText('view')
+    await user.click(button)
+
+    const url = screen.queryByText('23')
+    expect(url).toBeNull()
+
+  })
+
 })
