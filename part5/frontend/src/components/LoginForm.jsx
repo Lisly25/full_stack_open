@@ -1,16 +1,16 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const LoginForm = ({ login, setUser, setMessage, blogService }) => {
-  
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    
+
     try
     {
-      const user = await login({username, password})
+      const user = await login({ username, password })
       window.localStorage.setItem(
         'loggedBlogAppUser', JSON.stringify(user)
       )
@@ -34,27 +34,27 @@ const LoginForm = ({ login, setUser, setMessage, blogService }) => {
   }
 
   return (
-  <form onSubmit={handleLogin}>
-    <div>
-      username
+    <form onSubmit={handleLogin}>
+      <div>
+        username
         <input
-        type="text"
-        value={username}
-        name="Username"
-        onChange={({ target }) => setUsername(target.value)}
+          type="text"
+          value={username}
+          name="Username"
+          onChange={({ target }) => setUsername(target.value)}
         />
-    </div>
-    <div>
-      password
+      </div>
+      <div>
+        password
         <input
-        type="password"
-        value={password}
-        name="Password"
-        onChange={({ target }) => setPassword(target.value)}
-      />
-    </div>
-    <button type="submit">login</button>
-  </form>
-)}
+          type="password"
+          value={password}
+          name="Password"
+          onChange={({ target }) => setPassword(target.value)}
+        />
+      </div>
+      <button type="submit">login</button>
+    </form>
+  )}
 
 export default LoginForm

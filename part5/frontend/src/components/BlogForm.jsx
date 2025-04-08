@@ -1,7 +1,7 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const BlogForm = ({ blogFormRef, blogService, setMessage, setBlogs }) => {
-  
+
   const [blogTitle, setBlogTitle] = useState('')
   const [blogAuthor, setBlogAuthor] = useState('')
   const [blogUrl, setBlogUrl] = useState('')
@@ -16,7 +16,7 @@ const BlogForm = ({ blogFormRef, blogService, setMessage, setBlogs }) => {
         title: blogTitle,
         url: blogUrl
       }
-      const response = await blogService.create(newBlog)
+      await blogService.create(newBlog)
       const newBlogs = await blogService.getAll()
       setBlogs(newBlogs)
       setMessage(`a new blog ${blogTitle} by ${blogAuthor} added`)
@@ -39,20 +39,20 @@ const BlogForm = ({ blogFormRef, blogService, setMessage, setBlogs }) => {
   }
 
   return (
-  <form onSubmit={handleBlogCreation}>
-    <div>
-      title
-        <input type="text" value={blogTitle} onChange={({target}) => setBlogTitle(target.value)} />
-    </div>
-    <div>
-      author
-        <input type="text" value={blogAuthor} onChange={({target}) => setBlogAuthor(target.value)} />
-    </div>
-    <div>
-      url
-        <input type="text" value={blogUrl} onChange={({target}) => setBlogUrl(target.value)} />
-    </div>
-    <button type="submit">create</button>
-  </form>)
+    <form onSubmit={handleBlogCreation}>
+      <div>
+        title
+        <input type="text" value={blogTitle} onChange={({ target }) => setBlogTitle(target.value)} />
+      </div>
+      <div>
+        author
+        <input type="text" value={blogAuthor} onChange={({ target }) => setBlogAuthor(target.value)} />
+      </div>
+      <div>
+        url
+        <input type="text" value={blogUrl} onChange={({ target }) => setBlogUrl(target.value)} />
+      </div>
+      <button type="submit">create</button>
+    </form>)
 }
 export default BlogForm

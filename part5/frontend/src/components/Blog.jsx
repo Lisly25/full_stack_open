@@ -1,7 +1,7 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const Blog = ({ blog, blogService, setMessage, setBlogs, user }) => {
-  
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -29,7 +29,7 @@ const Blog = ({ blog, blogService, setMessage, setBlogs, user }) => {
         url: blog.url
       }
 
-      const response = await blogService.update(blogData, blog.id)
+      await blogService.update(blogData, blog.id)
       const newBlogs = await blogService.getAll()
       setBlogs(newBlogs)
 
@@ -72,7 +72,7 @@ const Blog = ({ blog, blogService, setMessage, setBlogs, user }) => {
     return (
       <div style={blogStyle}>
         {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
-      </div> 
+      </div>
     )
   }
   else
@@ -84,7 +84,7 @@ const Blog = ({ blog, blogService, setMessage, setBlogs, user }) => {
         {blog.likes}<button onClick={likeBlog}>like</button><br/>
         {blog.user.username}<br/>
         {(user.username === blog.user.username) && <button onClick={handleBlogDelete}>Remove</button>}
-      </div>  
+      </div>
     )
   }
 }
