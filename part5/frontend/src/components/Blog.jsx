@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const Blog = ({ blog, blogService, setMessage, setBlogs }) => {
+const Blog = ({ blog, blogService, setMessage, setBlogs, user }) => {
   
   const blogStyle = {
     paddingTop: 10,
@@ -44,6 +44,29 @@ const Blog = ({ blog, blogService, setMessage, setBlogs }) => {
     }
   }
 
+  const handleBlogDelete = async (event) => {
+    event.preventDefault()
+
+    try
+    {
+      await blogService.deleteBlog(blog.id)
+      const newBlogs = await blogService.getAll()
+      setBlogs(newBlogs)
+      setMessage('Removed blog')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
+    catch (exception)
+    {
+      console.log(exception)
+      setMessage('Failed to remove blog')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
+  }
+
   if (!visibility)
   {
     return (
@@ -60,6 +83,7 @@ const Blog = ({ blog, blogService, setMessage, setBlogs }) => {
         {blog.url}<br/>
         {blog.likes}<button onClick={likeBlog}>like</button><br/>
         {blog.user.username}<br/>
+        {(user.username === blog.user.username) && <button onClick={handleBlogDelete}>Remove</button>}
       </div>  
     )
   }

@@ -12,8 +12,6 @@ const getAll = async () => {
   const blogs = response.data
   blogs.sort((a, b) => b.likes - a.likes)
 
-  console.log(blogs)
-
   return blogs
 }
 
@@ -31,4 +29,12 @@ const update = async (blogData, blogID) => {
   return response.data
 }
 
-export default { getAll, create, setToken, update }
+const deleteBlog = async blogID => {
+  const config = {
+    headers: { Authorization: token }
+  }
+
+  const response = await axios.delete(`${baseUrl}/${blogID}`, config)
+}
+
+export default { getAll, create, setToken, update, deleteBlog }
