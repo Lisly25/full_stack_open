@@ -1,10 +1,11 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
+const { loginWith } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page }) => {
 
-    await request.post('http://localhost:3003/api/testing/reset')
-    await request.post('http://localhost:3003/api/users', {
+    await request.post('/api/testing/reset')
+    await request.post('/api/users', {
       data: {
         name: 'Tester',
         username: 'Tester',
@@ -12,7 +13,7 @@ describe('Blog app', () => {
       }
     })
 
-    await page.goto('http://localhost:5173')
+    await page.goto('/')
   })
 
   test('Login form is shown', async ({ page }) => {
@@ -20,27 +21,29 @@ describe('Blog app', () => {
 	await expect(title).toBeVisible()
 	const loginButton = await page.getByText('login')
 	await expect(loginButton).toBeVisible()
-	const username = await page.getByText('username')
+	const username = await page.getByTestId('username')
 	await expect(username).toBeVisible()
-	const password = await page.getByText('password')
+	const password = await page.getByTestId('password')
 	await expect(password).toBeVisible()
   })
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
 
-      await page.getByTestId('username').fill('Tester')
-      await page.getByTestId('password').fill('secret')
+      await loginWith(page, 'Tester', 'secret')
 
-      await page.getByRole('button', { name: 'login' }).click()
+      await expect(page.getByText('Tester logged in')).toBeVisible()
     })
 
     test('fails with wrong credentials', async ({ page }) => {
 
-      await page.getByTestId('username').fill('Incorrect')
-      await page.getByTestId('password').fill('incorrect')
-    
-	    await page.getByRole('button', { name: 'login' }).click()
+      await loginWith(page, 'Incorrect', 'invalid')
+
+      const errorDiv = await page.getByTestId('error-message')
+
+      await expect(errorDiv).toContainText('Wrong credentials')
+      await expect(errorDiv).toHaveCSS('border-style', 'solid')
+      await expect(page.getByText('Incorrect logged in')).not.toBeVisible()
     })
   })
 
