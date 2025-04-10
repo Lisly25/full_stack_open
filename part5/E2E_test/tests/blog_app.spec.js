@@ -1,5 +1,6 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith, createBlog } = require('./helper')
+const { loginWith, createBlog, likeBlog } = require('./helper')
+const { setMaxIdleHTTPParsers } = require('http')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -64,6 +65,14 @@ describe('Blog app', () => {
       await createBlog(page, 'Test blog has been created', 'playwright.com', 'Tester')
 
       await expect(page.getByText('Test blog has been created Tester')).toBeVisible()
+    })
+
+    test('a blog can be liked', async ({ page }) => {
+      await createBlog(page, 'Test blog to be liked', 'playwright.com', 'Tester')
+
+      await likeBlog(page, 'Test blog to be liked')
+
+      await expect(page.getByText('1')).toBeVisible()
     })
   })
 
