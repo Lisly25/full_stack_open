@@ -3,17 +3,16 @@ import Blog from './Blog'
 import BlogForm from './BlogForm'
 import { expect, test, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
-import { useRef } from 'react'
 
 describe ('<Blog />', () => {
 
   const blog = {
-    author: "Tester",
-    title: "Testing is important",
-    url: "example.com",
+    author: 'Tester',
+    title: 'Testing is important',
+    url: 'example.com',
     likes: 23,
     user: {
-      username: "tester"
+      username: 'tester'
     }
   }
 
@@ -28,7 +27,7 @@ describe ('<Blog />', () => {
   const mockSetBlogs = vi.fn()
 
   const userData = {
-    username: "Tester"
+    username: 'Tester'
   }
 
   test ('blog title and author are displayed in default view', async () => {
@@ -77,7 +76,7 @@ describe ('<Blog />', () => {
 
   })
 
-  test ('blog\s likes are displayed after the "view" button is clicked', async () => {
+  test ('blog\'s likes are displayed after the "view" button is clicked', async () => {
 
     render (
       <Blog blog={blog} blogService={mockHandler} user={userData}/>
@@ -114,9 +113,9 @@ describe ('<Blog />', () => {
       <BlogForm blogService={mockHandler} setMessage={mockSetMessage} setBlogs={mockSetBlogs}/>
     )
 
-    const titleInput = container.querySelector("#title-input")
-    const authorInput = container.querySelector("#author-input")
-    const urlInput = container.querySelector("#url-input")
+    const titleInput = container.querySelector('#title-input')
+    const authorInput = container.querySelector('#author-input')
+    const urlInput = container.querySelector('#url-input')
 
     const createButton = screen.getByText('create')
 
