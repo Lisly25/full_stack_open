@@ -42,15 +42,15 @@ const BlogForm = ({ blogFormRef, blogService, setMessage, setBlogs }) => {
     <form onSubmit={handleBlogCreation}>
       <div>
         title
-        <input type="text" value={blogTitle} onChange={({ target }) => setBlogTitle(target.value)} id="title-input" />
+        <input data-testid="new-blog-title" type="text" value={blogTitle} onChange={({ target }) => setBlogTitle(target.value)} id="title-input" />
       </div>
       <div>
         author
-        <input type="text" value={blogAuthor} onChange={({ target }) => setBlogAuthor(target.value)} id="author-input"/>
+        <input data-testid="new-blog-author" type="text" value={blogAuthor} onChange={({ target }) => setBlogAuthor(target.value)} id="author-input"/>
       </div>
       <div>
         url
-        <input type="text" value={blogUrl} onChange={({ target }) => setBlogUrl(target.value)} id="url-input"/>
+        <input data-testid="new-blog-url" type="text" value={blogUrl} onChange={({ target }) => setBlogUrl(target.value)} id="url-input"/>
       </div>
       <button type="submit">create</button>
     </form>)
