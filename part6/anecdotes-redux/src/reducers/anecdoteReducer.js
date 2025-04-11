@@ -17,6 +17,10 @@ const asObject = (anecdote) => {
   }
 }
 
+const orderAnecdotes = (anecdotes) => {
+  return anecdotes.slice().sort((a, b) => b.votes - a.votes)
+}
+
 const initialState = anecdotesAtStart.map(asObject)
 
 export const voteActionCreator = (id) => {
@@ -50,13 +54,13 @@ const reducer = (state = initialState, action) => {
         ...anecdoteToChange,
         votes: anecdoteToChange.votes + 1
       }
-      return state.map(anecdote =>
+      return orderAnecdotes(state.map(anecdote =>
         anecdote.id !== id ? anecdote : changedAnecdote 
-      )
+      ))
     }
     case 'NEW_ANECDOTE':
-      return state.concat(action.payload)
-    default: return state
+      return orderAnecdotes(state.concat(action.payload))
+    default: return orderAnecdotes(state)
   }
 }
 
