@@ -104,6 +104,42 @@ describe('Blog app', () => {
 
       await expect(page.getByText('Remove')).not.toBeVisible()
     })
+
+    test('blogs are arranged in the order of likes, with the most liked on top', async ({ request, page }) => {
+
+      // Creating first blog - will have 0 likes
+
+      await createBlog(page, '0 likes', 'playwright.com', 'Tester')
+
+      // Creating second blog - will have 2 likes
+
+      await createBlog(page, '2 likes', 'playwright.com', 'Tester')
+
+      await likeBlog(page, '2 likes')
+
+      await page.getByRole('button', { name: 'hide'}).click()
+
+      await likeBlog(page, '2 likes')
+
+      await page.getByRole('button', { name: 'hide'}).click()
+
+      // Creating third blog - will have 1 like
+
+      await createBlog(page, '1 like', 'playwright.com', 'Tester')
+
+      await likeBlog(page, '1 like')
+
+      await page.getByRole('button', { name: 'hide'}).click()
+
+      const blogs = await page.locator('data-testid=blogs');
+
+      //const expectedOrder = ['2 likes Tester', '1 like Tester', '0 likes Tester']
+
+      const expectedOrder = '2 likes Tester view1 like Tester view0 likes Tester view'
+
+      await expect(blogs).toHaveText(expectedOrder)
+
+    })
   })
 
 })

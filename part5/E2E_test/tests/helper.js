@@ -13,10 +13,10 @@ const createBlog = async (page, title, url, author) => {
 }
 
 const likeBlog = async (page, blogText) => {
-	const blog = await page.getByText(blogText).locator('..')
+	const blog = await page.getByText(blogText)
 
 	await blog.getByRole('button', { name: 'view'}).click()
-	await page.getByRole('button', { name: 'like'}).click()
+	await blog.getByRole('button', { name: 'like'}).click()
 
 	return blog
 }
