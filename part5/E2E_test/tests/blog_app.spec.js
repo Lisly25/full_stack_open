@@ -83,6 +83,27 @@ describe('Blog app', () => {
       await expect(page.getByText('Test blog to be deleted Tester')).not.toBeVisible()
       await expect(page.getByText('Removed blog')).toBeVisible()
     })
+
+    test('those who did not create a blog can\'t see the delete button', async ({ request, page }) => {
+      await createBlog(page, 'Exclusive blog', 'playwright.com', 'Tester')
+
+      await page.getByRole('button', { name: 'Log out' }).click()
+
+      await request.post('/api/users', {
+        data: {
+          name: 'Guest',
+          username: 'Guest',
+          password: 'secret'
+        }
+      })
+      await loginWith(page, 'Guest', 'secret')
+
+      const blog = await page.getByText('Exclusive blog').locator('..')
+
+	    await blog.getByRole('button', { name: 'view'}).click()
+
+      await expect(page.getByText('Remove')).not.toBeVisible()
+    })
   })
 
 })
