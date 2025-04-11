@@ -21,4 +21,11 @@ const likeBlog = async (page, blogText) => {
 	return blog
 }
 
-export { loginWith, createBlog, likeBlog }
+const deleteBlog = async (page, blogText) => {
+	const blog = await page.getByText(blogText).locator('..')
+
+	await blog.getByRole('button', { name: 'view'}).click()
+	await page.getByRole('button', { name: 'Remove'}).click()
+}
+
+export { loginWith, createBlog, likeBlog, deleteBlog }

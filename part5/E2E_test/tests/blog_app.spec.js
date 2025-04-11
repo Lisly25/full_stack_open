@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith, createBlog, likeBlog } = require('./helper')
+const { loginWith, createBlog, likeBlog, deleteBlog } = require('./helper')
 const { setMaxIdleHTTPParsers } = require('http')
 
 describe('Blog app', () => {
@@ -73,6 +73,15 @@ describe('Blog app', () => {
       await likeBlog(page, 'Test blog to be liked')
 
       await expect(page.getByText('1')).toBeVisible()
+    })
+
+    test('a blog can be deleted by its creator', async ({ page }) => {
+      await createBlog(page, 'Test blog to be deleted', 'playwright.com', 'Tester')
+
+      await deleteBlog(page, 'Test blog to be deleted')
+
+      await expect(page.getByText('Test blog to be deleted Tester')).not.toBeVisible()
+      await expect(page.getByText('Removed blog')).toBeVisible()
     })
   })
 
