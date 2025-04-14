@@ -16,7 +16,7 @@ const Filter = () => {
   return (
     <div style={style}>
       <form>
-        filter <input type="text" onChange={changeFilter}/>
+        filter <input name="filter-field" type="text" onChange={changeFilter}/>
       </form>
     </div>
   )
