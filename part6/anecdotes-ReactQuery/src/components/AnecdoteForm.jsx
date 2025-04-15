@@ -13,6 +13,13 @@ const AnecdoteForm = () => {
     onSuccess: (newAnecdote) => {
       const anecdotes = queryClient.getQueryData(['anecdotes'])
       queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
+    },
+    onError: (result) => {
+      console.log("ERROR OCCURED DURING POSTING", result)
+      dispatch({ type: 'ERROR', payload: "too short anecdote, must have length 5 or more" })
+      setTimeout(() => {
+        dispatch({ type: 'NULL' })
+      }, 5000)
     }
   })
 
