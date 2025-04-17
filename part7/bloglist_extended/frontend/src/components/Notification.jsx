@@ -1,23 +1,22 @@
 const Notification = ({ message }) => {
-
   const notificationStyle = {
-    background: 'lightgrey',
+    background: "lightgrey",
     fontSize: 25,
-    borderStyle: 'solid',
+    borderStyle: "solid",
     borderRadius: 5,
     padding: 10,
-    marginBottom: 10
-  }
+    marginBottom: 10,
+  };
 
   if (message === null) {
-    return null
+    return null;
   }
 
   return (
     <div style={notificationStyle} data-testid="error-message">
       {message}
     </div>
-  )
-}
+  );
+};
 
-export default Notification
+export default Notification;
