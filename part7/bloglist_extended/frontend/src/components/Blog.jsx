@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { useNotificationDispatch } from "../contexts/NotificationContext";
 
-const Blog = ({ blog, blogService, setMessage, setBlogs, user }) => {
+const Blog = ({ blog, blogService, setBlogs, user }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -8,6 +9,8 @@ const Blog = ({ blog, blogService, setMessage, setBlogs, user }) => {
     borderWidth: 1,
     marginBottom: 5,
   };
+
+  const dispatchNotification = useNotificationDispatch();
 
   const [visibility, setVisibility] = useState(false);
 
@@ -32,9 +35,9 @@ const Blog = ({ blog, blogService, setMessage, setBlogs, user }) => {
       setBlogs(newBlogs);
     } catch (exception) {
       console.log(exception);
-      setMessage("Failed to like blog");
+      dispatchNotification({ type: "LIKE_FAILED" });
       setTimeout(() => {
-        setMessage(null);
+        dispatchNotification({ type: "NULL" });
       }, 5000);
     }
   };
@@ -46,15 +49,15 @@ const Blog = ({ blog, blogService, setMessage, setBlogs, user }) => {
       await blogService.deleteBlog(blog.id);
       const newBlogs = await blogService.getAll();
       setBlogs(newBlogs);
-      setMessage("Removed blog");
+      dispatchNotification({ type: "DELETE" });
       setTimeout(() => {
-        setMessage(null);
+        dispatchNotification({ type: "NULL" });
       }, 5000);
     } catch (exception) {
       console.log(exception);
-      setMessage("Failed to remove blog");
+      dispatchNotification({ type: "DELETE_FAIL" });
       setTimeout(() => {
-        setMessage(null);
+        dispatchNotification({ type: "NULL" });
       }, 5000);
     }
   };

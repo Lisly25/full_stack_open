@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNotificationDispatch } from "../contexts/NotificationContext";
 
-const LoginForm = ({ login, setUser, setMessage, blogService }) => {
+const LoginForm = ({ login, setUser, blogService }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const dispatchNotification = useNotificationDispatch();
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -14,15 +17,15 @@ const LoginForm = ({ login, setUser, setMessage, blogService }) => {
       setUser(user);
       setUsername("");
       setPassword("");
-      setMessage("You logged in successfully");
+      dispatchNotification({ type: "LOGIN" });
       setTimeout(() => {
-        setMessage(null);
+        dispatchNotification({ type: "NULL" });
       }, 5000);
     } catch (exception) {
       console.log(exception);
-      setMessage("Wrong credentials");
+      dispatchNotification({ type: "LOGIN_FAIL" });
       setTimeout(() => {
-        setMessage(null);
+        dispatchNotification({ type: "NULL" });
       }, 5000);
     }
   };

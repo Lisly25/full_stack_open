@@ -1,4 +1,6 @@
-const Notification = ({ message }) => {
+import { useNotificationValue } from "../contexts/NotificationContext";
+
+const Notification = () => {
   const notificationStyle = {
     background: "lightgrey",
     fontSize: 25,
@@ -7,6 +9,8 @@ const Notification = ({ message }) => {
     padding: 10,
     marginBottom: 10,
   };
+
+  const message = useNotificationValue();
 
   if (message === null) {
     return null;

@@ -11,7 +11,6 @@ import login from "./services/login";
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [message, setMessage] = useState(null);
   const blogFormRef = useRef();
 
   useEffect(() => {
@@ -31,20 +30,15 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
-        <Notification message={message} />
-        <LoginForm
-          login={login}
-          setUser={setUser}
-          setMessage={setMessage}
-          blogService={blogService}
-        />
+        <Notification />
+        <LoginForm login={login} setUser={setUser} blogService={blogService} />
       </div>
     );
   } else {
     return (
       <div>
         <h2>blogs</h2>
-        <Notification message={message} />
+        <Notification />
         <h3>{user.username} logged in</h3>
         <Logout setUser={setUser} />
         <h2>create new blog</h2>
@@ -52,7 +46,6 @@ const App = () => {
           <BlogForm
             blogFormRef={blogFormRef}
             blogService={blogService}
-            setMessage={setMessage}
             setBlogs={setBlogs}
           />
         </Togglable>
@@ -62,7 +55,6 @@ const App = () => {
               key={blog.id}
               blog={blog}
               blogService={blogService}
-              setMessage={setMessage}
               setBlogs={setBlogs}
               user={user}
             />

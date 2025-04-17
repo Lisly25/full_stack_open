@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useNotificationDispatch } from "../contexts/NotificationContext";
 
-const BlogForm = ({ blogFormRef, blogService, setMessage, setBlogs }) => {
+const BlogForm = ({ blogFormRef, blogService, setBlogs }) => {
   const [blogTitle, setBlogTitle] = useState("");
   const [blogAuthor, setBlogAuthor] = useState("");
   const [blogUrl, setBlogUrl] = useState("");
+
+  const dispatchNotification = useNotificationDispatch();
 
   const handleBlogCreation = async (event) => {
     event.preventDefault();
@@ -17,19 +20,19 @@ const BlogForm = ({ blogFormRef, blogService, setMessage, setBlogs }) => {
       await blogService.create(newBlog);
       const newBlogs = await blogService.getAll();
       setBlogs(newBlogs);
-      setMessage(`a new blog ${blogTitle} by ${blogAuthor} added`);
+      dispatchNotification({ type: "CREATE", payload: { ...newBlog } });
       setBlogAuthor("");
       setBlogTitle("");
       setBlogUrl("");
       blogFormRef.current.toggleVisibility();
       setTimeout(() => {
-        setMessage(null);
+        dispatchNotification({ type: "NULL" });
       }, 5000);
     } catch (exception) {
       console.log(exception);
-      setMessage("Blog creation failed");
+      dispatchNotification({ type: "CREATE_FAIL" });
       setTimeout(() => {
-        setMessage(null);
+        dispatchNotification({ type: "NULL" });
       }, 5000);
     }
   };
