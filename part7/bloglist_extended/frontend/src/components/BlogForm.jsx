@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { useNotificationDispatch } from "../contexts/NotificationContext";
+import {
+  useNotificationDispatch,
+  useHideNotificationAfter_Time,
+} from "../contexts/NotificationContext";
 
 const BlogForm = ({ blogFormRef, blogService, setBlogs }) => {
   const [blogTitle, setBlogTitle] = useState("");
@@ -7,6 +10,7 @@ const BlogForm = ({ blogFormRef, blogService, setBlogs }) => {
   const [blogUrl, setBlogUrl] = useState("");
 
   const dispatchNotification = useNotificationDispatch();
+  const dispatchHideNotification = useHideNotificationAfter_Time();
 
   const handleBlogCreation = async (event) => {
     event.preventDefault();
@@ -25,15 +29,11 @@ const BlogForm = ({ blogFormRef, blogService, setBlogs }) => {
       setBlogTitle("");
       setBlogUrl("");
       blogFormRef.current.toggleVisibility();
-      setTimeout(() => {
-        dispatchNotification({ type: "NULL" });
-      }, 5000);
+      dispatchHideNotification(5000);
     } catch (exception) {
       console.log(exception);
       dispatchNotification({ type: "CREATE_FAIL" });
-      setTimeout(() => {
-        dispatchNotification({ type: "NULL" });
-      }, 5000);
+      dispatchHideNotification(5000);
     }
   };
 

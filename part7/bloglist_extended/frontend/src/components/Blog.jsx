@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { useNotificationDispatch } from "../contexts/NotificationContext";
+import {
+  useNotificationDispatch,
+  useHideNotificationAfter_Time,
+} from "../contexts/NotificationContext";
 
 const Blog = ({ blog, blogService, setBlogs, user }) => {
   const blogStyle = {
@@ -11,6 +14,7 @@ const Blog = ({ blog, blogService, setBlogs, user }) => {
   };
 
   const dispatchNotification = useNotificationDispatch();
+  const dispatchHideNotification = useHideNotificationAfter_Time();
 
   const [visibility, setVisibility] = useState(false);
 
@@ -36,9 +40,7 @@ const Blog = ({ blog, blogService, setBlogs, user }) => {
     } catch (exception) {
       console.log(exception);
       dispatchNotification({ type: "LIKE_FAILED" });
-      setTimeout(() => {
-        dispatchNotification({ type: "NULL" });
-      }, 5000);
+      dispatchHideNotification(5000);
     }
   };
 
@@ -50,15 +52,11 @@ const Blog = ({ blog, blogService, setBlogs, user }) => {
       const newBlogs = await blogService.getAll();
       setBlogs(newBlogs);
       dispatchNotification({ type: "DELETE" });
-      setTimeout(() => {
-        dispatchNotification({ type: "NULL" });
-      }, 5000);
+      dispatchHideNotification(5000);
     } catch (exception) {
       console.log(exception);
       dispatchNotification({ type: "DELETE_FAIL" });
-      setTimeout(() => {
-        dispatchNotification({ type: "NULL" });
-      }, 5000);
+      dispatchHideNotification(5000);
     }
   };
 

@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { useNotificationDispatch } from "../contexts/NotificationContext";
+import {
+  useNotificationDispatch,
+  useHideNotificationAfter_Time,
+} from "../contexts/NotificationContext";
 
 const LoginForm = ({ login, setUser, blogService }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatchNotification = useNotificationDispatch();
+  const dispatchHideNotification = useHideNotificationAfter_Time();
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -18,15 +22,11 @@ const LoginForm = ({ login, setUser, blogService }) => {
       setUsername("");
       setPassword("");
       dispatchNotification({ type: "LOGIN" });
-      setTimeout(() => {
-        dispatchNotification({ type: "NULL" });
-      }, 5000);
+      dispatchHideNotification(5000);
     } catch (exception) {
       console.log(exception);
       dispatchNotification({ type: "LOGIN_FAIL" });
-      setTimeout(() => {
-        dispatchNotification({ type: "NULL" });
-      }, 5000);
+      dispatchHideNotification(5000);
     }
   };
 

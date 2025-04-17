@@ -48,11 +48,16 @@ export const useNotificationDispatch = () => {
   return notificationAndDispatch[1];
 };
 
-// export const showNotificationForTime = (dispatchFunction, time) => {
-//   dispatchFunction();
-//   setTimeout(() => {
-//     useNotificationDispatch("NULL");
-//   }, time);
-// };
+export const useHideNotificationAfter_Time = () => {
+  const dispatch = useNotificationDispatch();
+
+  const hideNotification = (time) => {
+    setTimeout(() => {
+      dispatch({ type: "NULL" });
+    }, time);
+  };
+
+  return hideNotification;
+};
 
 export default NotificationContext;
