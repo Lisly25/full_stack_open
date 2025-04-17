@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import {
   useNotificationDispatch,
   useHideNotificationAfter_Time,
 } from "../contexts/NotificationContext";
 
-const Blog = ({ blog, blogService, setBlogs, user }) => {
+const Blog = ({ blog, blogService, user }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -22,42 +23,56 @@ const Blog = ({ blog, blogService, setBlogs, user }) => {
     visibility ? setVisibility(false) : setVisibility(true);
   };
 
+  const queryClient = useQueryClient();
+
+  const likeBlogMutation = useMutation({
+    mutationFn: blogService.update,
+    onSuccess: (updatedBlog) => {
+      const oldBlogs = queryClient.getQueryData(["blogs"]);
+      const blogs = oldBlogs.map((b) =>
+        b.id === updatedBlog.id ? updatedBlog : b,
+      );
+      const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
+      queryClient.setQueryData(["blogs"], sortedBlogs);
+    },
+    onError: () => {
+      dispatchNotification({ type: "LIKE_FAILED" });
+      dispatchHideNotification(5000);
+    },
+  });
+
   const likeBlog = async (event) => {
     event.preventDefault();
 
-    try {
-      const blogData = {
-        user: blog.user.id,
-        likes: blog.likes + 1,
-        author: blog.author,
-        title: blog.title,
-        url: blog.url,
-      };
+    const blogData = {
+      user: blog.user.id,
+      likes: blog.likes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url,
+    };
 
-      await blogService.update(blogData, blog.id);
-      const newBlogs = await blogService.getAll();
-      setBlogs(newBlogs);
-    } catch (exception) {
-      console.log(exception);
-      dispatchNotification({ type: "LIKE_FAILED" });
-      dispatchHideNotification(5000);
-    }
+    likeBlogMutation.mutate([blogData, blog.id]);
   };
+
+  const deleteBlogMutation = useMutation({
+    mutationFn: blogService.deleteBlog,
+    onSuccess: () => {
+      dispatchNotification({ type: "DELETE" });
+      dispatchHideNotification(5000);
+      const oldBlogs = queryClient.getQueryData(["blogs"]);
+      const newBlogs = oldBlogs.filter((n) => n.id !== blog.id);
+      queryClient.setQueryData(["blogs"], newBlogs);
+    },
+    onError: () => {
+      dispatchNotification({ type: "DELETE_FAIL" });
+      dispatchHideNotification(5000);
+    },
+  });
 
   const handleBlogDelete = async (event) => {
     event.preventDefault();
-
-    try {
-      await blogService.deleteBlog(blog.id);
-      const newBlogs = await blogService.getAll();
-      setBlogs(newBlogs);
-      dispatchNotification({ type: "DELETE" });
-      dispatchHideNotification(5000);
-    } catch (exception) {
-      console.log(exception);
-      dispatchNotification({ type: "DELETE_FAIL" });
-      dispatchHideNotification(5000);
-    }
+    deleteBlogMutation.mutate(blog.id);
   };
 
   if (!visibility) {
