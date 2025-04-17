@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import {
   useNotificationDispatch,
   useHideNotificationAfter_Time,
 } from "../contexts/NotificationContext";
 
-const BlogForm = ({ blogFormRef, blogService, setBlogs }) => {
+const BlogForm = ({ blogFormRef, blogService }) => {
   const [blogTitle, setBlogTitle] = useState("");
   const [blogAuthor, setBlogAuthor] = useState("");
   const [blogUrl, setBlogUrl] = useState("");
@@ -12,29 +13,36 @@ const BlogForm = ({ blogFormRef, blogService, setBlogs }) => {
   const dispatchNotification = useNotificationDispatch();
   const dispatchHideNotification = useHideNotificationAfter_Time();
 
-  const handleBlogCreation = async (event) => {
-    event.preventDefault();
+  const queryClient = useQueryClient();
 
-    try {
-      const newBlog = {
-        author: blogAuthor,
-        title: blogTitle,
-        url: blogUrl,
-      };
-      await blogService.create(newBlog);
-      const newBlogs = await blogService.getAll();
-      setBlogs(newBlogs);
-      dispatchNotification({ type: "CREATE", payload: { ...newBlog } });
-      setBlogAuthor("");
-      setBlogTitle("");
-      setBlogUrl("");
-      blogFormRef.current.toggleVisibility();
-      dispatchHideNotification(5000);
-    } catch (exception) {
-      console.log(exception);
+  const newBlogMutation = useMutation({
+    mutationFn: blogService.create,
+    onSuccess: (newBlog) => {
+      const oldBlogs = queryClient.getQueryData(["blogs"]);
+      const blogs = oldBlogs.concat(newBlog);
+      const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
+      queryClient.setQueryData(["blogs"], sortedBlogs);
+    },
+    onError: () => {
       dispatchNotification({ type: "CREATE_FAIL" });
       dispatchHideNotification(5000);
-    }
+    },
+  });
+
+  const handleBlogCreation = async (event) => {
+    event.preventDefault();
+    const newBlog = {
+      author: blogAuthor,
+      title: blogTitle,
+      url: blogUrl,
+    };
+    newBlogMutation.mutate(newBlog);
+    dispatchNotification({ type: "CREATE", payload: { ...newBlog } });
+    setBlogAuthor("");
+    setBlogTitle("");
+    setBlogUrl("");
+    blogFormRef.current.toggleVisibility();
+    dispatchHideNotification(5000);
   };
 
   return (

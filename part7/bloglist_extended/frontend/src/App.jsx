@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
 import Logout from "./components/Logout";
@@ -9,13 +10,9 @@ import blogService from "./services/blogs";
 import login from "./services/login";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  //const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const blogFormRef = useRef();
-
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
@@ -25,6 +22,18 @@ const App = () => {
       blogService.setToken(user.token);
     }
   }, []);
+
+  const blogList = useQuery({
+    queryKey: ["blogs"],
+    queryFn: blogService.getAll,
+    refetchOnWindowFocus: false,
+  });
+
+  if (blogList.isLoading) {
+    return <div>Loading blogs...</div>;
+  }
+
+  const blogs = blogList.data;
 
   if (user === null) {
     return (
@@ -43,11 +52,7 @@ const App = () => {
         <Logout setUser={setUser} />
         <h2>create new blog</h2>
         <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-          <BlogForm
-            blogFormRef={blogFormRef}
-            blogService={blogService}
-            setBlogs={setBlogs}
-          />
+          <BlogForm blogFormRef={blogFormRef} blogService={blogService} />
         </Togglable>
         <div data-testid="blogs">
           {blogs.map((blog) => (
@@ -55,7 +60,6 @@ const App = () => {
               key={blog.id}
               blog={blog}
               blogService={blogService}
-              setBlogs={setBlogs}
               user={user}
             />
           ))}
