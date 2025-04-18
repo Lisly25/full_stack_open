@@ -1,16 +1,13 @@
-import PropTypes from "prop-types";
+import { useUserDispatch } from "../contexts/UserContext";
 
-const Logout = ({ setUser }) => {
+const Logout = () => {
+  const dispatchUser = useUserDispatch();
+
   const deleteToken = () => {
-    window.localStorage.removeItem("loggedBlogAppUser");
-    setUser(null);
+    dispatchUser({ type: "LOGOUT" });
   };
 
   return <button onClick={deleteToken}>Log out</button>;
-};
-
-Logout.propTypes = {
-  setUser: PropTypes.func.isRequired,
 };
 
 export default Logout;

@@ -3,22 +3,24 @@ import {
   useNotificationDispatch,
   useHideNotificationAfter_Time,
 } from "../contexts/NotificationContext";
+import { useUserDispatch } from "../contexts/UserContext";
 
-const LoginForm = ({ login, setUser, blogService }) => {
+const LoginForm = ({ login, blogService }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatchNotification = useNotificationDispatch();
   const dispatchHideNotification = useHideNotificationAfter_Time();
 
+  const dispatchUser = useUserDispatch();
+
   const handleLogin = async (event) => {
     event.preventDefault();
 
     try {
       const user = await login({ username, password });
-      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
+      dispatchUser({ type: "LOGIN", payload: user });
       blogService.setToken(user.token);
-      setUser(user);
       setUsername("");
       setPassword("");
       dispatchNotification({ type: "LOGIN" });

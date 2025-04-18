@@ -4,8 +4,9 @@ import {
   useNotificationDispatch,
   useHideNotificationAfter_Time,
 } from "../contexts/NotificationContext";
+import { useUserValue } from "../contexts/UserContext";
 
-const Blog = ({ blog, blogService, user }) => {
+const Blog = ({ blog, blogService }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -13,6 +14,8 @@ const Blog = ({ blog, blogService, user }) => {
     borderWidth: 1,
     marginBottom: 5,
   };
+
+  const user = useUserValue();
 
   const dispatchNotification = useNotificationDispatch();
   const dispatchHideNotification = useHideNotificationAfter_Time();
