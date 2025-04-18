@@ -7,7 +7,9 @@ import Logout from "./components/Logout";
 import Notification from "./components/Notification";
 import UsersView from "./views/UsersView";
 import BlogsView from "./views/BlogsView";
+import UserProfile from "./views/UserProfile";
 import blogService from "./services/blogs";
+import usersService from "./services/users";
 import login from "./services/login";
 
 const App = () => {
@@ -28,6 +30,12 @@ const App = () => {
   const blogList = useQuery({
     queryKey: ["blogs"],
     queryFn: blogService.getAll,
+    refetchOnWindowFocus: false,
+  });
+
+  const users = useQuery({
+    queryKey: ["users"],
+    queryFn: usersService.getUsers,
     refetchOnWindowFocus: false,
   });
 
@@ -66,11 +74,12 @@ const App = () => {
         </div>
 
         <Routes>
-          <Route path="/users" element={<UsersView />} />
+          <Route path="/users" element={<UsersView users={users} />} />
           <Route
             path="/"
             element={<BlogsView blogs={blogs} blogFormRef={blogFormRef} />}
           />
+          <Route path="/users/:id" element={<UserProfile users={users} />} />
         </Routes>
       </Router>
     );
