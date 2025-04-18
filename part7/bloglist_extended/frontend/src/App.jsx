@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useUserValue, useUserDispatch } from "./contexts/UserContext";
-import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
 import Logout from "./components/Logout";
-import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
-import Togglable from "./components/Togglable";
+import UsersView from "./views/UsersView";
+import BlogsView from "./views/BlogsView";
 import blogService from "./services/blogs";
 import login from "./services/login";
 
@@ -37,6 +37,10 @@ const App = () => {
 
   const blogs = blogList.data;
 
+  const padding = {
+    padding: 5,
+  };
+
   if (user === null) {
     return (
       <div>
@@ -47,21 +51,28 @@ const App = () => {
     );
   } else {
     return (
-      <div>
-        <h2>blogs</h2>
-        <Notification />
-        <h3>{user.username} logged in</h3>
-        <Logout />
-        <h2>create new blog</h2>
-        <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-          <BlogForm blogFormRef={blogFormRef} blogService={blogService} />
-        </Togglable>
-        <div data-testid="blogs">
-          {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} blogService={blogService} />
-          ))}
+      <Router>
+        <div>
+          <Link style={padding} to="/">
+            blogs
+          </Link>
+          <Link style={padding} to="/users">
+            users
+          </Link>
+          <span style={padding}>{user.username} logged in</span>
+          <Logout />
+          <Notification />
+          <h2>Blog App</h2>
         </div>
-      </div>
+
+        <Routes>
+          <Route path="/users" element={<UsersView />} />
+          <Route
+            path="/"
+            element={<BlogsView blogs={blogs} blogFormRef={blogFormRef} />}
+          />
+        </Routes>
+      </Router>
     );
   }
 };
