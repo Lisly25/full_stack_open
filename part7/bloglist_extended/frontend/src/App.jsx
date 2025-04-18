@@ -8,6 +8,7 @@ import Notification from "./components/Notification";
 import UsersView from "./views/UsersView";
 import BlogsView from "./views/BlogsView";
 import UserProfile from "./views/UserProfile";
+import BlogPage from "./views/BlogPage";
 import blogService from "./services/blogs";
 import usersService from "./services/users";
 import login from "./services/login";
@@ -80,6 +81,7 @@ const App = () => {
             element={<BlogsView blogs={blogs} blogFormRef={blogFormRef} />}
           />
           <Route path="/users/:id" element={<UserProfile users={users} />} />
+          <Route path="/blogs/:id" element={<BlogPage blogList={blogList} />} />
         </Routes>
       </Router>
     );

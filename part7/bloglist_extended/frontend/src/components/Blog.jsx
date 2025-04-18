@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import {
   useNotificationDispatch,
   useHideNotificationAfter_Time,
@@ -81,14 +82,18 @@ const Blog = ({ blog, blogService }) => {
   if (!visibility) {
     return (
       <div style={blogStyle}>
-        {blog.title} {blog.author}{" "}
+        <Link to={`/blogs/${blog.id}`}>
+          {blog.title} by {blog.author}
+        </Link>
         <button onClick={toggleVisibility}>view</button>
       </div>
     );
   } else {
     return (
       <div style={blogStyle}>
-        {blog.title} {blog.author}{" "}
+        <Link to={`/blogs/${blog.id}`}>
+          {blog.title} by {blog.author}
+        </Link>
         <button onClick={toggleVisibility}>hide</button>
         <br />
         {blog.url}
