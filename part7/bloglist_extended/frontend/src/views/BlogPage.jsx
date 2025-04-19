@@ -7,6 +7,23 @@ import {
 import { useUserValue } from "../contexts/UserContext";
 import blogService from "../services/blogs";
 
+const Comments = ({ comments }) => {
+  let commentId = 0;
+
+  if (!comments) {
+    return null;
+  } else {
+    return (
+      <div>
+        {comments.map((comment) => {
+          commentId += 1;
+          return <li key={commentId}>{comment}</li>;
+        })}
+      </div>
+    );
+  }
+};
+
 const BlogPage = ({ blogList }) => {
   const id = useParams().id;
   const user = useUserValue();
@@ -85,10 +102,13 @@ const BlogPage = ({ blogList }) => {
           {blog.likes} likes
           <button onClick={likeBlog}>like</button>
         </span>
-        <p>Added by {blog.user.username}</p>
+        <br />
+        Added by {blog.user.username}
         {user.username === blog.user.username && (
           <button onClick={handleBlogDelete}>Remove</button>
         )}
+        <h3>comments</h3>
+        <Comments comments={blog.comments} />
       </div>
     );
   }

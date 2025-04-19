@@ -3,6 +3,7 @@ const router = require("express").Router();
 const Blog = require("../models/blog");
 const User = require("../models/user");
 const { config } = require("dotenv");
+const { request, response } = require("express");
 const userExtractor = require("../utils/middleware").userExtractor;
 
 router.get("/", async (request, response) => {
@@ -80,6 +81,22 @@ router.put("/:id", async (request, response) => {
     new: true,
   }).populate("user", { id: 1, username: 1, name: 1 });
   response.json(updatedBlog);
+});
+
+router.post("/:id/comments", async (request, response) => {
+  const blogId = request.params.id;
+
+  const blog = await Blog.findById(blogId);
+
+  if (!blog) {
+    console.log("Received id: ", blogId);
+    return response.status(400).send({ error: "invalid blog id" });
+  }
+
+  blog.comments.push(request.body.comment);
+  const updatedBlog = await blog.save();
+
+  response.status(201).json(updatedBlog);
 });
 
 module.exports = router;
