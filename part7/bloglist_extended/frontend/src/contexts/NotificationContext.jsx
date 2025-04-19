@@ -16,6 +16,8 @@ const notificationReducer = (state, action) => {
       return "You logged in successfully";
     case "LOGIN_FAIL":
       return "Wrong credentials";
+    case "COMMENT_FAILED":
+      return "Failed to comment on blog";
     case "NULL":
       return null;
     default:

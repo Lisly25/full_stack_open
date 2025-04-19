@@ -1,11 +1,54 @@
 import { useParams } from "react-router-dom";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import {
   useNotificationDispatch,
   useHideNotificationAfter_Time,
 } from "../contexts/NotificationContext";
 import { useUserValue } from "../contexts/UserContext";
 import blogService from "../services/blogs";
+
+const AddComment = ({
+  dispatchNotification,
+  dispatchHideNotification,
+  blogID,
+}) => {
+  const [comment, setComment] = useState("");
+  const queryClient = useQueryClient();
+
+  const newCommentMutation = useMutation({
+    mutationFn: blogService.comment,
+    onSuccess: (updatedBlog) => {
+      const oldBlogs = queryClient.getQueryData(["blogs"]);
+      const newBlogs = oldBlogs.map((b) =>
+        b.id === updatedBlog.id ? updatedBlog : b,
+      );
+      queryClient.setQueryData(["blogs"], newBlogs);
+    },
+    onError: () => {
+      dispatchNotification({ type: "COMMENT_FAILED" });
+      dispatchHideNotification(5000);
+    },
+  });
+
+  const addComment = async (event) => {
+    event.preventDefault();
+    newCommentMutation.mutate([blogID, { comment: comment }]);
+    setComment("");
+  };
+
+  return (
+    <form onSubmit={addComment} id="add-comment">
+      <input
+        type="text"
+        value={comment}
+        onChange={({ target }) => setComment(target.value)}
+        id="new-comment"
+      />
+      <button type="submit">add comment</button>
+    </form>
+  );
+};
 
 const Comments = ({ comments }) => {
   let commentId = 0;
@@ -108,6 +151,11 @@ const BlogPage = ({ blogList }) => {
           <button onClick={handleBlogDelete}>Remove</button>
         )}
         <h3>comments</h3>
+        <AddComment
+          dispatchHideNotification={dispatchHideNotification}
+          dispatchNotification={dispatchNotification}
+          blogID={blog.id}
+        />
         <Comments comments={blog.comments} />
       </div>
     );
