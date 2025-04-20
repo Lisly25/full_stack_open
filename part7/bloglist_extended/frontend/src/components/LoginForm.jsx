@@ -39,6 +39,8 @@ const LoginForm = ({ login, blogService }) => {
     <form onSubmit={handleLogin}>
       <div>
         <TextField
+          sx={{ py: 1 }}
+          autoComplete="off"
           label="username"
           data-testid="username"
           type="text"
@@ -49,6 +51,7 @@ const LoginForm = ({ login, blogService }) => {
       </div>
       <div>
         <TextField
+          sx={{ py: 1 }}
           label="password"
           data-testid="password"
           type="password"

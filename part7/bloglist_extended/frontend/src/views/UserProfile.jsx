@@ -16,8 +16,10 @@ const UserProfile = ({ users }) => {
 
     return (
       <div>
-        <Typography variant="h4">{user.username}</Typography>
-        <Typography variant="h6">added blogs</Typography>
+        <Typography sx={{ py: 2 }} variant="h4">
+          {user.username}
+        </Typography>
+        <Typography variant="h5">Added blogs:</Typography>
         <List>
           {user.blogs.map((blog) => (
             <ListItem divider={true} key={blog.id}>

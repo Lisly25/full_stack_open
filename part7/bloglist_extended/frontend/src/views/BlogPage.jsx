@@ -44,13 +44,19 @@ const AddComment = ({
   return (
     <form onSubmit={addComment} id="add-comment">
       <TextField
+        sx={{ p: 1 }}
         type="text"
         value={comment}
         onChange={({ target }) => setComment(target.value)}
         id="new-comment"
         autoComplete="off"
       />
-      <Button variant="contained" color="primary" type="submit">
+      <Button
+        sx={{ m: 1, p: 1 }}
+        variant="contained"
+        color="primary"
+        type="submit"
+      >
         add comment
       </Button>
     </form>
@@ -141,22 +147,27 @@ const BlogPage = ({ blogList }) => {
 
     return (
       <div>
-        <Typography variant="h3">
-          {blog.title} by {blog.author}
+        <Typography sx={{ py: 1 }} variant="h3">
+          <b>{blog.title}</b> by {blog.author}
         </Typography>
-        <Typography>
+        <Typography sx={{ py: 1 }}>
           <a href={blog.url} target="_blank" rel="noreferrer">
             {blog.url}
           </a>
         </Typography>
-        <Typography variant="body2">
+        <Typography variant="h6">
           {blog.likes} likes
-          <Button variant="contained" color="primary" onClick={likeBlog}>
+          <Button
+            sx={{ m: 1 }}
+            variant="contained"
+            color="primary"
+            onClick={likeBlog}
+          >
             like
           </Button>
         </Typography>
-        <Typography variant="body2">
-          Added by {blog.user.username}
+        <Typography sx={{ py: 1 }} variant="h6">
+          Added by <b>{blog.user.username}</b>
           {user.username === blog.user.username && (
             <Button
               variant="contained"
@@ -167,7 +178,9 @@ const BlogPage = ({ blogList }) => {
             </Button>
           )}
         </Typography>
-        <Typography variant="h4">comments</Typography>
+        <Typography sx={{ py: 1 }} variant="h4">
+          Comments
+        </Typography>
         <AddComment
           dispatchHideNotification={dispatchHideNotification}
           dispatchNotification={dispatchNotification}

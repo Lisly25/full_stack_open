@@ -52,6 +52,7 @@ const BlogForm = ({ blogFormRef, blogService }) => {
     <form onSubmit={handleBlogCreation}>
       <div>
         <TextField
+          sx={{ py: 1 }}
           label="title"
           data-testid="new-blog-title"
           type="text"
@@ -62,6 +63,7 @@ const BlogForm = ({ blogFormRef, blogService }) => {
       </div>
       <div>
         <TextField
+          sx={{ py: 1 }}
           label="author"
           data-testid="new-blog-author"
           type="text"
@@ -72,6 +74,7 @@ const BlogForm = ({ blogFormRef, blogService }) => {
       </div>
       <div>
         <TextField
+          sx={{ py: 1 }}
           label="url"
           data-testid="new-blog-url"
           type="text"

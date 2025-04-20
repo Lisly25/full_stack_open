@@ -58,18 +58,18 @@ const App = () => {
 
   const blogs = blogList.data;
 
-  const padding = {
-    padding: 5,
-  };
-
-  let theme = createTheme();
+  let theme = createTheme({
+    spacing: 16,
+  });
   theme = responsiveFontSizes(theme);
 
   if (user === null) {
     return (
       <Container>
         <ThemeProvider theme={theme}>
-          <Typography variant="h2">Log in to application</Typography>
+          <Typography sx={{ pb: 2 }} variant="h2">
+            Log in to application
+          </Typography>
           <Notification />
           <LoginForm login={login} blogService={blogService} />
         </ThemeProvider>
@@ -88,14 +88,18 @@ const App = () => {
                 <Button color="inherit" component={Link} to="/users">
                   users
                 </Button>
-                <span style={padding}>{user.username} logged in</span>
+                <Typography sx={{ mx: 2 }}>
+                  {user.username} logged in
+                </Typography>
                 <Logout />
               </Toolbar>
             </AppBar>
 
             <div style={{ paddingTop: "60px" }}>
               <Notification />
-              <Typography variant="h2">Blog App</Typography>
+              <Typography sx={{ py: 2 }} variant="h2">
+                Blog App
+              </Typography>
             </div>
 
             <Routes>

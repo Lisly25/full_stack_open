@@ -34,14 +34,16 @@ const UsersView = ({ users }) => {
   } else {
     return (
       <div>
-        <Typography variant="h4">Users</Typography>
+        <Typography sx={{ py: 1 }} variant="h4">
+          Users
+        </Typography>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell></TableCell>
                 <TableCell>
-                  <Typography>blogs created</Typography>
+                  <Typography variant="h6">Blogs created</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>

@@ -15,7 +15,9 @@ import {
 const BlogsView = ({ blogs, blogFormRef }) => {
   return (
     <div>
-      <Typography variant="h4">create new blog</Typography>
+      <Typography sx={{ py: 1 }} variant="h4">
+        Create new blog
+      </Typography>
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm blogFormRef={blogFormRef} blogService={blogService} />
       </Togglable>
