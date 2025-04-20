@@ -11,7 +11,11 @@ const Notification = () => {
     return null;
   }
 
-  return <Alert data-testid="error-message">{message}</Alert>;
+  return (
+    <div>
+      <Alert data-testid="error-message">{message}</Alert>
+    </div>
+  );
 };
 
 export default Notification;

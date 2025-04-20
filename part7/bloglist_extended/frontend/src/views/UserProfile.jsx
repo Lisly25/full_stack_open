@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 
 //Styles
 
-import { List, ListItem, ListItemText } from "@mui/material";
+import { List, ListItem, ListItemText, Typography } from "@mui/material";
 
 const UserProfile = ({ users }) => {
   const id = useParams().id;
@@ -16,8 +16,8 @@ const UserProfile = ({ users }) => {
 
     return (
       <div>
-        <h2>{user.username}</h2>
-        <h3>added blogs</h3>
+        <Typography variant="h4">{user.username}</Typography>
+        <Typography variant="h6">added blogs</Typography>
         <List>
           {user.blogs.map((blog) => (
             <ListItem divider={true} key={blog.id}>

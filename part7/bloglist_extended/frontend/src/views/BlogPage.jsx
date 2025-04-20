@@ -8,6 +8,10 @@ import {
 import { useUserValue } from "../contexts/UserContext";
 import blogService from "../services/blogs";
 
+//Styles
+
+import { Button, TextField, Typography } from "@mui/material";
+
 const AddComment = ({
   dispatchNotification,
   dispatchHideNotification,
@@ -39,13 +43,16 @@ const AddComment = ({
 
   return (
     <form onSubmit={addComment} id="add-comment">
-      <input
+      <TextField
         type="text"
         value={comment}
         onChange={({ target }) => setComment(target.value)}
         id="new-comment"
+        autoComplete="off"
       />
-      <button type="submit">add comment</button>
+      <Button variant="contained" color="primary" type="submit">
+        add comment
+      </Button>
     </form>
   );
 };
@@ -57,12 +64,12 @@ const Comments = ({ comments }) => {
     return null;
   } else {
     return (
-      <div>
+      <Typography>
         {comments.map((comment) => {
           commentId += 1;
           return <li key={commentId}>{comment}</li>;
         })}
-      </div>
+      </Typography>
     );
   }
 };
@@ -134,23 +141,33 @@ const BlogPage = ({ blogList }) => {
 
     return (
       <div>
-        <h2>
+        <Typography variant="h3">
           {blog.title} by {blog.author}
-        </h2>
-        <a href={blog.url} target="_blank" rel="noreferrer">
-          {blog.url}
-        </a>
-        <span>
-          <br />
+        </Typography>
+        <Typography>
+          <a href={blog.url} target="_blank" rel="noreferrer">
+            {blog.url}
+          </a>
+        </Typography>
+        <Typography variant="body2">
           {blog.likes} likes
-          <button onClick={likeBlog}>like</button>
-        </span>
-        <br />
-        Added by {blog.user.username}
-        {user.username === blog.user.username && (
-          <button onClick={handleBlogDelete}>Remove</button>
-        )}
-        <h3>comments</h3>
+          <Button variant="contained" color="primary" onClick={likeBlog}>
+            like
+          </Button>
+        </Typography>
+        <Typography variant="body2">
+          Added by {blog.user.username}
+          {user.username === blog.user.username && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleBlogDelete}
+            >
+              Remove
+            </Button>
+          )}
+        </Typography>
+        <Typography variant="h4">comments</Typography>
         <AddComment
           dispatchHideNotification={dispatchHideNotification}
           dispatchNotification={dispatchNotification}

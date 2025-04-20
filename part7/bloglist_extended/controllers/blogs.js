@@ -84,6 +84,11 @@ router.put("/:id", async (request, response) => {
 });
 
 router.post("/:id/comments", async (request, response) => {
+  if (request.body.comment.length < 1) {
+    console.log("Empyt comment");
+    return response.status(400).send({ error: "Empty comments are invalid" });
+  }
+
   const blogId = request.params.id;
 
   const blog = await Blog.findById(blogId);

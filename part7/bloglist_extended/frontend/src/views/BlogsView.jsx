@@ -4,12 +4,18 @@ import BlogForm from "../components/BlogForm";
 import blogService from "../services/blogs";
 
 //Styles
-import { Table, TableBody, TableContainer, Paper } from "@mui/material";
+import {
+  Table,
+  TableBody,
+  TableContainer,
+  Paper,
+  Typography,
+} from "@mui/material";
 
 const BlogsView = ({ blogs, blogFormRef }) => {
   return (
     <div>
-      <h2>create new blog</h2>
+      <Typography variant="h4">create new blog</Typography>
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm blogFormRef={blogFormRef} blogService={blogService} />
       </Togglable>

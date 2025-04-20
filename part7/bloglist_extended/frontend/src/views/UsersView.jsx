@@ -10,6 +10,7 @@ import {
   TableCell,
   TableHead,
   Button,
+  Typography,
 } from "@mui/material";
 
 const UserRow = ({ user }) => {
@@ -20,7 +21,9 @@ const UserRow = ({ user }) => {
           {user.username}
         </Button>
       </TableCell>
-      <TableCell>{user.blogs.length}</TableCell>
+      <TableCell>
+        <Typography>{user.blogs.length}</Typography>
+      </TableCell>
     </TableRow>
   );
 };
@@ -31,13 +34,15 @@ const UsersView = ({ users }) => {
   } else {
     return (
       <div>
-        <h2>Users</h2>
+        <Typography variant="h4">Users</Typography>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell></TableCell>
-                <TableCell>blogs created</TableCell>
+                <TableCell>
+                  <Typography>blogs created</Typography>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
