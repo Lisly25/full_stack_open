@@ -1,5 +1,9 @@
 import { useParams } from "react-router-dom";
 
+//Styles
+
+import { List, ListItem, ListItemText } from "@mui/material";
+
 const UserProfile = ({ users }) => {
   const id = useParams().id;
 
@@ -14,11 +18,13 @@ const UserProfile = ({ users }) => {
       <div>
         <h2>{user.username}</h2>
         <h3>added blogs</h3>
-        <div>
+        <List>
           {user.blogs.map((blog) => (
-            <li key={blog.id}>{blog.title}</li>
+            <ListItem divider={true} key={blog.id}>
+              <ListItemText>{blog.title}</ListItemText>
+            </ListItem>
           ))}
-        </div>
+        </List>
       </div>
     );
   }

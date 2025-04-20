@@ -3,6 +3,9 @@ import Blog from "../components/Blog";
 import BlogForm from "../components/BlogForm";
 import blogService from "../services/blogs";
 
+//Styles
+import { Table, TableBody, TableContainer, Paper } from "@mui/material";
+
 const BlogsView = ({ blogs, blogFormRef }) => {
   return (
     <div>
@@ -10,11 +13,15 @@ const BlogsView = ({ blogs, blogFormRef }) => {
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm blogFormRef={blogFormRef} blogService={blogService} />
       </Togglable>
-      <div data-testid="blogs">
-        {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
-      </div>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            {blogs.map((blog) => (
+              <Blog key={blog.id} blog={blog} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

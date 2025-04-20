@@ -13,6 +13,9 @@ import blogService from "./services/blogs";
 import usersService from "./services/users";
 import login from "./services/login";
 
+//Styles
+import { Container, AppBar, Toolbar, Button } from "@mui/material";
+
 const App = () => {
   const blogFormRef = useRef();
 
@@ -52,38 +55,45 @@ const App = () => {
 
   if (user === null) {
     return (
-      <div>
+      <Container>
         <h2>Log in to application</h2>
         <Notification />
         <LoginForm login={login} blogService={blogService} />
-      </div>
+      </Container>
     );
   } else {
     return (
-      <Router>
-        <div>
-          <Link style={padding} to="/">
-            blogs
-          </Link>
-          <Link style={padding} to="/users">
-            users
-          </Link>
-          <span style={padding}>{user.username} logged in</span>
-          <Logout />
-          <Notification />
+      <Container>
+        <Router>
+          <AppBar>
+            <Toolbar>
+              <Button color="inherit" component={Link} to="/">
+                blogs
+              </Button>
+              <Button color="inherit" component={Link} to="/users">
+                users
+              </Button>
+              <span style={padding}>{user.username} logged in</span>
+              <Logout />
+              <Notification />
+            </Toolbar>
+          </AppBar>
           <h2>Blog App</h2>
-        </div>
 
-        <Routes>
-          <Route path="/users" element={<UsersView users={users} />} />
-          <Route
-            path="/"
-            element={<BlogsView blogs={blogs} blogFormRef={blogFormRef} />}
-          />
-          <Route path="/users/:id" element={<UserProfile users={users} />} />
-          <Route path="/blogs/:id" element={<BlogPage blogList={blogList} />} />
-        </Routes>
-      </Router>
+          <Routes>
+            <Route path="/users" element={<UsersView users={users} />} />
+            <Route
+              path="/"
+              element={<BlogsView blogs={blogs} blogFormRef={blogFormRef} />}
+            />
+            <Route path="/users/:id" element={<UserProfile users={users} />} />
+            <Route
+              path="/blogs/:id"
+              element={<BlogPage blogList={blogList} />}
+            />
+          </Routes>
+        </Router>
+      </Container>
     );
   }
 };

@@ -5,6 +5,9 @@ import {
   useHideNotificationAfter_Time,
 } from "../contexts/NotificationContext";
 
+//Styles
+import { Button, TextField } from "@mui/material";
+
 const BlogForm = ({ blogFormRef, blogService }) => {
   const [blogTitle, setBlogTitle] = useState("");
   const [blogAuthor, setBlogAuthor] = useState("");
@@ -48,8 +51,8 @@ const BlogForm = ({ blogFormRef, blogService }) => {
   return (
     <form onSubmit={handleBlogCreation}>
       <div>
-        title
-        <input
+        <TextField
+          label="title"
           data-testid="new-blog-title"
           type="text"
           value={blogTitle}
@@ -58,8 +61,8 @@ const BlogForm = ({ blogFormRef, blogService }) => {
         />
       </div>
       <div>
-        author
-        <input
+        <TextField
+          label="author"
           data-testid="new-blog-author"
           type="text"
           value={blogAuthor}
@@ -68,8 +71,8 @@ const BlogForm = ({ blogFormRef, blogService }) => {
         />
       </div>
       <div>
-        url
-        <input
+        <TextField
+          label="url"
           data-testid="new-blog-url"
           type="text"
           value={blogUrl}
@@ -77,7 +80,9 @@ const BlogForm = ({ blogFormRef, blogService }) => {
           id="url-input"
         />
       </div>
-      <button type="submit">create</button>
+      <Button variant="contained" color="primary" type="submit">
+        create
+      </Button>
     </form>
   );
 };

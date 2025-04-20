@@ -1,13 +1,27 @@
 import { Link } from "react-router-dom";
 
+//Styles
+import {
+  Table,
+  TableBody,
+  TableContainer,
+  Paper,
+  TableRow,
+  TableCell,
+  TableHead,
+  Button,
+} from "@mui/material";
+
 const UserRow = ({ user }) => {
   return (
-    <tr key={user.id}>
-      <td>
-        <Link to={`/users/${user.id}`}>{user.username}</Link>
-      </td>
-      <td>{user.blogs.length}</td>
-    </tr>
+    <TableRow key={user.id}>
+      <TableCell>
+        <Button component={Link} to={`/users/${user.id}`}>
+          {user.username}
+        </Button>
+      </TableCell>
+      <TableCell>{user.blogs.length}</TableCell>
+    </TableRow>
   );
 };
 
@@ -18,19 +32,21 @@ const UsersView = ({ users }) => {
     return (
       <div>
         <h2>Users</h2>
-        <table>
-          <thead>
-            <tr>
-              <th></th>
-              <th>blogs created</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.data.map((user) => {
-              return <UserRow key={user.id} user={user} />;
-            })}
-          </tbody>
-        </table>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell></TableCell>
+                <TableCell>blogs created</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.data.map((user) => {
+                return <UserRow key={user.id} user={user} />;
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
     );
   }

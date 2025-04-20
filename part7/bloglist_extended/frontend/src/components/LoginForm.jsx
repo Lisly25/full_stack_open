@@ -5,6 +5,9 @@ import {
 } from "../contexts/NotificationContext";
 import { useUserDispatch } from "../contexts/UserContext";
 
+//Styles
+import { Button, TextField } from "@mui/material";
+
 const LoginForm = ({ login, blogService }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -35,8 +38,8 @@ const LoginForm = ({ login, blogService }) => {
   return (
     <form onSubmit={handleLogin}>
       <div>
-        username
-        <input
+        <TextField
+          label="username"
           data-testid="username"
           type="text"
           value={username}
@@ -45,8 +48,8 @@ const LoginForm = ({ login, blogService }) => {
         />
       </div>
       <div>
-        password
-        <input
+        <TextField
+          label="password"
           data-testid="password"
           type="password"
           value={password}
@@ -54,7 +57,9 @@ const LoginForm = ({ login, blogService }) => {
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
+      <Button variant="contained" color="primary" type="submit">
+        login
+      </Button>
     </form>
   );
 };
