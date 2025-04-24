@@ -141,24 +141,25 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: (root, args) => {
-      if (!args) {
-        return books;
-      } else if (!args.genre) {
+      if (args.author && !args.genre) {
         const booksByAuthor = books.filter(
           (book) => book.author === args.author
         );
         return booksByAuthor;
-      } else if (!args.author) {
+      } else if (args.genre && !args.author) {
         const booksByGenre = books.filter((book) =>
           book.genres.includes(args.genre)
         );
         return booksByGenre;
-      } else {
+      } else if (args.genre && args.author) {
         const booksByGenreAndAuthor = books.filter(
           (book) =>
             book.genres.includes(args.genre) && book.author === args.author
         );
         return booksByGenreAndAuthor;
+      } else {
+        console.log("allBooks called without args");
+        return books;
       }
     },
     allAuthors: () => authors,

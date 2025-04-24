@@ -1,32 +1,40 @@
+import { ALL_BOOKS_DETAILED } from "../queries";
+import { useQuery } from "@apollo/client";
+
 const Books = (props) => {
+  const booksDetailed = useQuery(ALL_BOOKS_DETAILED);
+  console.log(booksDetailed);
+
   if (!props.show) {
-    return null
-  }
+    return null;
+  } else if (booksDetailed.loading) {
+    return <div>Loading books...</div>;
+  } else {
+    const books = booksDetailed.data.allBooks;
 
-  const books = []
+    return (
+      <div>
+        <h2>books</h2>
 
-  return (
-    <div>
-      <h2>books</h2>
-
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>author</th>
-            <th>published</th>
-          </tr>
-          {books.map((a) => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author}</td>
-              <td>{a.published}</td>
+        <table>
+          <tbody>
+            <tr>
+              <th></th>
+              <th>author</th>
+              <th>published</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
+            {books.map((a) => (
+              <tr key={a.title}>
+                <td>{a.title}</td>
+                <td>{a.author}</td>
+                <td>{a.published}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+};
 
-export default Books
+export default Books;
