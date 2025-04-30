@@ -1,8 +1,29 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const { v1: uuid } = require("uuid");
+const mongoose = require("mongoose");
 
-let authors = [
+mongoose.set("strictQuery", false);
+
+const Book = require("./models/Book");
+const Author = require("./models/Author");
+
+require("dotenv").config();
+
+const MONGODB_URI = process.env.MONGODB_URI;
+
+console.log("connecting to database");
+
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => {
+    console.log("connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log("error connection to MongoDB:", error.message);
+  });
+
+/* let authors = [
   {
     name: "Robert Martin",
     id: "afa51ab0-344d-11e9-a414-719c6709cf3e",
@@ -26,7 +47,7 @@ let authors = [
     name: "Sandi Metz", // birthyear not known
     id: "afa5b6f3-344d-11e9-a414-719c6709cf3e",
   },
-];
+]; */
 
 /*
  * Suomi:
@@ -42,7 +63,7 @@ let authors = [
  * Sin embargo, por simplicidad, almacenaremos el nombre del autor en conexión con el libro
  */
 
-let books = [
+/* let books = [
   {
     title: "Clean Code",
     published: 2008,
@@ -92,7 +113,7 @@ let books = [
     id: "afa5de04-344d-11e9-a414-719c6709cf3e",
     genres: ["classic", "revolution"],
   },
-];
+]; */
 
 /*
   you can remove the placeholder query once your first one has been implemented 
@@ -103,7 +124,7 @@ const typeDefs = `
   type Book {
     title: String!
     published: Int!
-    author: String!
+    author: Author!
     id: ID!
     genres: [String!]!
   }
@@ -136,7 +157,9 @@ const typeDefs = `
   }
 `;
 
-const resolvers = {
+// First version of the resolver for the initial exercises where the database existed only in memory
+
+/* const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
@@ -178,6 +201,77 @@ const resolvers = {
       const book = { ...args, id: uuid() };
       books = books.concat(book);
       return book;
+    },
+    editAuthor: (root, args) => {
+      const author = authors.find((a) => a.name === args.name);
+      if (!author) {
+        return null;
+      }
+
+      const updatedAuthor = { ...author, born: args.setBornTo };
+      authors = authors.map((a) =>
+        a.name === updatedAuthor.name ? updatedAuthor : a
+      );
+      return updatedAuthor;
+    },
+  },
+}; */
+
+// Second version of database that uses MongoDB
+
+const resolvers = {
+  Query: {
+    bookCount: async () => Book.collection.countDocuments(),
+    authorCount: async () => Author.collection.countDocuments(),
+    allBooks: async (root, args) => {
+      if (args.author && !args.genre) {
+        const booksByAuthor = books.filter(
+          (book) => book.author === args.author
+        );
+        return booksByAuthor;
+      } else if (args.genre && !args.author) {
+        const booksByGenre = books.filter((book) =>
+          book.genres.includes(args.genre)
+        );
+        return booksByGenre;
+      } else if (args.genre && args.author) {
+        const booksByGenreAndAuthor = books.filter(
+          (book) =>
+            book.genres.includes(args.genre) && book.author === args.author
+        );
+        return booksByGenreAndAuthor;
+      } else {
+        console.log("allBooks called without args");
+        return Book.find({}).populate("author", { name: 1 });
+      }
+    },
+    allAuthors: async () => {
+      return Author.find({});
+    },
+  },
+  Author: {
+    bookCount: (root) => {
+      const booksWritten = books.filter((book) => book.author === root.name);
+      return booksWritten.length;
+    },
+  },
+  Mutation: {
+    addBook: async (root, args) => {
+      let author = await Author.find({ name: args.author });
+      if (author.length === 0) {
+        console.log("Author was not found to be pre-exsiting");
+        const newAuthor = new Author({ name: args.author });
+        await newAuthor.save();
+        author = newAuthor;
+      }
+      console.log("Newly created author:", author);
+      const book = new Book({
+        author: author,
+        title: args.title,
+        published: args.published,
+        genres: args.genres,
+      });
+      return book.save();
     },
     editAuthor: (root, args) => {
       const author = authors.find((a) => a.name === args.name);
