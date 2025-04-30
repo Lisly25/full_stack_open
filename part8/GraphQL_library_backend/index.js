@@ -225,23 +225,29 @@ const resolvers = {
     authorCount: async () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
       if (args.author && !args.genre) {
-        const booksByAuthor = books.filter(
-          (book) => book.author === args.author
-        );
-        return booksByAuthor;
+        const author = await Author.findOne({ name: args.author });
+        if (!author) {
+          return null;
+        }
+        return Book.find({ author: author._id }).populate("author", {
+          name: 1,
+        });
       } else if (args.genre && !args.author) {
-        const booksByGenre = books.filter((book) =>
-          book.genres.includes(args.genre)
-        );
-        return booksByGenre;
+        return Book.find({ genres: args.genre }).populate("author", {
+          name: 1,
+        });
       } else if (args.genre && args.author) {
-        const booksByGenreAndAuthor = books.filter(
-          (book) =>
-            book.genres.includes(args.genre) && book.author === args.author
+        const author = await Author.findOne({ name: args.author });
+        if (!author) {
+          return null;
+        }
+        return Book.find({ author: author._id, genres: args.genre }).populate(
+          "author",
+          {
+            name: 1,
+          }
         );
-        return booksByGenreAndAuthor;
       } else {
-        console.log("allBooks called without args");
         return Book.find({}).populate("author", { name: 1 });
       }
     },
@@ -250,21 +256,19 @@ const resolvers = {
     },
   },
   Author: {
-    bookCount: (root) => {
-      const booksWritten = books.filter((book) => book.author === root.name);
-      return booksWritten.length;
+    bookCount: async (root) => {
+      const books = await Book.find({ author: root._id });
+      return books.length;
     },
   },
   Mutation: {
     addBook: async (root, args) => {
-      let author = await Author.find({ name: args.author });
-      if (author.length === 0) {
-        console.log("Author was not found to be pre-exsiting");
+      let author = await Author.findOne({ name: args.author });
+      if (!author) {
         const newAuthor = new Author({ name: args.author });
         await newAuthor.save();
         author = newAuthor;
       }
-      console.log("Newly created author:", author);
       const book = new Book({
         author: author,
         title: args.title,
@@ -273,17 +277,13 @@ const resolvers = {
       });
       return book.save();
     },
-    editAuthor: (root, args) => {
-      const author = authors.find((a) => a.name === args.name);
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({ name: args.name });
       if (!author) {
         return null;
       }
-
-      const updatedAuthor = { ...author, born: args.setBornTo };
-      authors = authors.map((a) =>
-        a.name === updatedAuthor.name ? updatedAuthor : a
-      );
-      return updatedAuthor;
+      author.born = args.setBornTo;
+      return author.save();
     },
   },
 };
