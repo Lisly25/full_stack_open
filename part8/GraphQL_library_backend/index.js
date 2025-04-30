@@ -2,6 +2,7 @@ const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const { v1: uuid } = require("uuid");
 const mongoose = require("mongoose");
+const { GraphQLError } = require("graphql");
 
 mongoose.set("strictQuery", false);
 
@@ -219,6 +220,29 @@ const typeDefs = `
 
 // Second version of database that uses MongoDB
 
+const addAuthorHelper = async (args) => {
+  let author = await Author.findOne({ name: args.author });
+  const newAuthor = new Author({ name: args.author });
+  if (!author) {
+    try {
+      await newAuthor.save();
+      author = newAuthor;
+    } catch (error) {
+      throw new GraphQLError(
+        "Adding new book failed to author data being invalid",
+        {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.author,
+            error,
+          },
+        }
+      );
+    }
+  }
+  return author;
+};
+
 const resolvers = {
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
@@ -263,27 +287,49 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (root, args) => {
-      let author = await Author.findOne({ name: args.author });
-      if (!author) {
-        const newAuthor = new Author({ name: args.author });
-        await newAuthor.save();
-        author = newAuthor;
-      }
+      const author = await addAuthorHelper(args);
       const book = new Book({
         author: author,
         title: args.title,
         published: args.published,
         genres: args.genres,
       });
-      return book.save();
+      try {
+        await book.save();
+      } catch (error) {
+        throw new GraphQLError("Adding new book failed due to invalid data", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.title,
+            error,
+          },
+        });
+      }
+      return book;
     },
     editAuthor: async (root, args) => {
       const author = await Author.findOne({ name: args.name });
       if (!author) {
-        return null;
+        throw new GraphQLError("Cannot edit author - author not in database", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.name,
+          },
+        });
       }
       author.born = args.setBornTo;
-      return author.save();
+      try {
+        await author.save();
+      } catch (error) {
+        throw new GraphQLError("Editing author birth date failed", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.setBornTo,
+            error,
+          },
+        });
+      }
+      return author;
     },
   },
 };
