@@ -15,8 +15,10 @@ export const ALL_BOOKS_DETAILED = gql`
   query {
     allBooks {
       title
-      author
       published
+      author {
+        name
+      }
     }
   }
 `;
