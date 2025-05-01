@@ -38,7 +38,6 @@ const SetAuthorBirthYear = ({ authors }) => {
     const formData = new FormData(form);
 
     const formJson = Object.fromEntries(formData.entries());
-    console.log("Form data json:", formJson);
 
     updateBirthYear({
       variables: { name: formJson.selectedAuthor, setBornTo: Number(year) },
