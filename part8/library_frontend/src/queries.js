@@ -64,3 +64,21 @@ export const LOGIN = gql`
     }
   }
 `;
+
+export const FILTER_BOOKS_BY_GENRE = gql`
+  query filter_book_by_genre($genre: String!) {
+    allBooks(genre: $genre) {
+      title
+      published
+      author {
+        name
+      }
+    }
+  }
+`;
+
+export const GET_ALL_GENRES = gql`
+  query {
+    allGenres
+  }
+`;
