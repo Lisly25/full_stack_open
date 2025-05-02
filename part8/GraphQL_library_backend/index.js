@@ -3,6 +3,7 @@ const { startStandaloneServer } = require("@apollo/server/standalone");
 const { v1: uuid } = require("uuid");
 const mongoose = require("mongoose");
 const { GraphQLError } = require("graphql");
+const _ = require("lodash");
 
 const jwt = require("jsonwebtoken");
 
@@ -139,6 +140,7 @@ const typeDefs = `
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
     me: User
+    allGenres: [String!]!
   }
 
   type Author {
@@ -302,6 +304,12 @@ const resolvers = {
     },
     me: async (root, args, context) => {
       return context.currentUser;
+    },
+    allGenres: async () => {
+      const books = await Book.find({});
+      const genres = books.map((book) => book.genres);
+      const bookGenresFinal = _.union(...genres);
+      return bookGenresFinal;
     },
   },
   Author: {
