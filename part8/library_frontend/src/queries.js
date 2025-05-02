@@ -82,3 +82,21 @@ export const GET_ALL_GENRES = gql`
     allGenres
   }
 `;
+
+export const FAVORITE_GENRE_BOOKS = gql`
+  query {
+    favoriteGenreBooks {
+      title
+      published
+      author {
+        name
+      }
+    }
+  }
+`;
+
+export const FAVORITE_GENRE = gql`
+  query {
+    favoriteGenre
+  }
+`;

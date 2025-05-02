@@ -6,6 +6,7 @@ import {
   ALL_BOOKS_DETAILED,
   GET_ALL_GENRES,
   FILTER_BOOKS_BY_GENRE,
+  FAVORITE_GENRE_BOOKS,
 } from "../queries";
 
 const NewBook = (props) => {
@@ -21,6 +22,7 @@ const NewBook = (props) => {
       { query: ALL_BOOKS_DETAILED },
       { query: GET_ALL_GENRES },
       { query: FILTER_BOOKS_BY_GENRE },
+      { query: FAVORITE_GENRE_BOOKS },
     ],
   });
 

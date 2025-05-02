@@ -141,6 +141,8 @@ const typeDefs = `
     allAuthors: [Author!]!
     me: User
     allGenres: [String!]!
+    favoriteGenreBooks: [Book!]!
+    favoriteGenre: String!
   }
 
   type Author {
@@ -310,6 +312,35 @@ const resolvers = {
       const genres = books.map((book) => book.genres);
       const bookGenresFinal = _.union(...genres);
       return bookGenresFinal;
+    },
+    favoriteGenreBooks: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError(
+          "Need to be logged in to receive book recommendations",
+          {
+            extensions: {
+              code: "UNAUTHORIZED",
+            },
+          }
+        );
+      }
+      const genre = context.currentUser.favoriteGenre;
+      return Book.find({ genres: genre }).populate("author", {
+        name: 1,
+      });
+    },
+    favoriteGenre: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError(
+          "Need to be logged in to retrieve favorite genre info",
+          {
+            extensions: {
+              code: "UNAUTHORIZED",
+            },
+          }
+        );
+      }
+      return context.currentUser.favoriteGenre;
     },
   },
   Author: {
