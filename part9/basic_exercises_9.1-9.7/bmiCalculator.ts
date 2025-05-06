@@ -1,3 +1,26 @@
+//Program usage: npm run calculateBmi <height> <weight>
+
+import { isNotNumber } from "./utils";
+
+interface bodyData {
+  height: number;
+  weight: number;
+}
+
+function parseArguments(args: string[]): bodyData {
+  if (args.length < 4) throw new Error("Not enough arguments");
+  if (args.length > 4) throw new Error("Too many arguments");
+
+  if (!isNotNumber(args[2]) && !isNotNumber(args[3])) {
+    return {
+      height: Number(args[2]),
+      weight: Number(args[3]),
+    };
+  } else {
+    throw new Error("Provided values were not numbers!");
+  }
+}
+
 function calculateBmi(height: number, weight: number): string {
   const height_in_meters: number = height / 100;
 
@@ -16,4 +39,13 @@ function calculateBmi(height: number, weight: number): string {
   }
 }
 
-console.log(calculateBmi(180, 74));
+try {
+  const { height, weight } = parseArguments(process.argv);
+  console.log(calculateBmi(height, weight));
+} catch (error: unknown) {
+  let errorMessage = "Something went wrong: ";
+  if (error instanceof Error) {
+    errorMessage += error.message;
+  }
+  console.log(errorMessage);
+}

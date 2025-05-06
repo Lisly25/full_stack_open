@@ -1,4 +1,38 @@
+// program usage: npm run calculateExercise <arg1> <arg2> ...
+// Minimum of 2 args
+// Last arg will always be the target amount
+// The rest of the args will form the array of daily exercise hours
+
+import { isNotNumber } from "./utils";
+
 type exerciseRating = 1 | 2 | 3;
+
+interface exerciseData {
+  daily_exercise_hours: number[];
+  target_amount: number;
+}
+
+function parseArguments(args: string[]): exerciseData {
+  if (args.length < 4) throw new Error("Not enough arguments");
+
+  let target_amount: number = 0;
+  let daily_exercise_hours: number[] = [];
+
+  for (let i: number = 2; i < args.length; i++) {
+    if (isNotNumber(args[i])) {
+      throw new Error("Provided values were not numbers!");
+    } else if (i == args.length - 1) {
+      target_amount = Number(args[i]);
+    } else {
+      daily_exercise_hours.push(Number(args[i]));
+    }
+  }
+
+  return {
+    daily_exercise_hours: daily_exercise_hours,
+    target_amount: target_amount,
+  };
+}
 
 interface Result {
   periodLength: number;
@@ -55,4 +89,13 @@ function calculateExercises(
   };
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  const { daily_exercise_hours, target_amount } = parseArguments(process.argv);
+  console.log(calculateExercises(daily_exercise_hours, target_amount));
+} catch (error: unknown) {
+  let errorMessage = "Something went wrong: ";
+  if (error instanceof Error) {
+    errorMessage += error.message;
+  }
+  console.log(errorMessage);
+}
