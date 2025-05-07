@@ -1,8 +1,11 @@
 import express from "express";
 import { calculateBmi } from "./bmiCalculator";
 import { isNotNumber } from "./utils";
+import { calculateExercises } from "./exerciseCalculator";
 
 const app = express();
+
+app.use(express.json());
 
 app.get("/ping", (_req, res) => {
   res.send("pong");
@@ -29,6 +32,44 @@ app.get("/bmi", (req, res) => {
     res.status(400);
     res.send({ error: "malformatted parameters" });
   }
+});
+
+app.post("/exercises", (req, res) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { daily_exercises, target } = req.body;
+
+  if (!daily_exercises || !target) {
+    res.status(400);
+    res.send({ error: "parameters missing" });
+  }
+
+  if (typeof target !== "number") {
+    res.status(400);
+    res.send({ error: "malformatted parameters" });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const target_numeric: number = target;
+
+  if (!Array.isArray(daily_exercises)) {
+    res.status(400);
+    res.send({ error: "malformatted parameters" });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const daily_exercises_arr: [] = daily_exercises;
+
+  for (let i: number = 0; i < daily_exercises_arr.length; i++) {
+    if (typeof daily_exercises_arr[i] !== "number") {
+      res.status(400);
+      res.send({ error: "malformatted parameters" });
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const daily_exercises_numeric: number[] = daily_exercises;
+
+  res.send(calculateExercises(daily_exercises_numeric, target_numeric));
 });
 
 const PORT = 3000;

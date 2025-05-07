@@ -44,7 +44,7 @@ interface Result {
   average: number;
 }
 
-function calculateExercises(
+export function calculateExercises(
   daily_exercise_hours: number[],
   target_amount: number
 ): Result {
@@ -69,8 +69,7 @@ function calculateExercises(
 
   let success: boolean = false;
   let rating: exerciseRating = 1;
-  let ratingDescription: string =
-    "The target was missed, exercised less than half as much as planned";
+  let ratingDescription: string = "bad";
 
   if (totalTrainingHours >= expectedTrainingHours) {
     success = true;
@@ -93,13 +92,17 @@ function calculateExercises(
   };
 }
 
-try {
-  const { daily_exercise_hours, target_amount } = parseArguments(process.argv);
-  console.log(calculateExercises(daily_exercise_hours, target_amount));
-} catch (error: unknown) {
-  let errorMessage = "Something went wrong: ";
-  if (error instanceof Error) {
-    errorMessage += error.message;
+if (require.main === module) {
+  try {
+    const { daily_exercise_hours, target_amount } = parseArguments(
+      process.argv
+    );
+    console.log(calculateExercises(daily_exercise_hours, target_amount));
+  } catch (error: unknown) {
+    let errorMessage = "Something went wrong: ";
+    if (error instanceof Error) {
+      errorMessage += error.message;
+    }
+    console.log(errorMessage);
   }
-  console.log(errorMessage);
 }
