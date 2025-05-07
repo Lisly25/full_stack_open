@@ -16,7 +16,7 @@ function parseArguments(args: string[]): exerciseData {
   if (args.length < 4) throw new Error("Not enough arguments");
 
   let target_amount: number = 0;
-  let daily_exercise_hours: number[] = [];
+  const daily_exercise_hours: number[] = [];
 
   for (let i: number = 2; i < args.length; i++) {
     if (isNotNumber(args[i])) {
@@ -58,10 +58,14 @@ function calculateExercises(
   const average: number = totalTrainingHours / daily_exercise_hours.length;
 
   let trainingDays: number = 0;
+  let day: number = 0;
 
-  for (let day in daily_exercise_hours) {
-    if (daily_exercise_hours[day] != 0) trainingDays += 1;
-  }
+  daily_exercise_hours.forEach(() => {
+    if (daily_exercise_hours[day] != 0) {
+      trainingDays += 1;
+    }
+    day++;
+  });
 
   let success: boolean = false;
   let rating: exerciseRating = 1;
